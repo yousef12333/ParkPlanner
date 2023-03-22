@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1096347164865",
+    "project_id": "parkplanner2",
+    "storage_bucket": "parkplanner2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096347164865:android:b9bfb965ce9dd5a1b6b440",
+        "android_client_info": {
+          "package_name": "com.example.parkplannerproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1096347164865-mv5p41t1udgfpbtfcvbuvau221nppd1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9-TbmVAzXRkHtHG8lCyylLVBuc8_yGhI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096347164865-mv5p41t1udgfpbtfcvbuvau221nppd1j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
