@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -97,7 +98,28 @@ class _RegistrationPageState extends State<RegistrationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registratie'),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'Creëer je account',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.white,
+        leading: SizedBox(
+          width: 80,
+          height: 30,
+          child: Image.asset(
+            '/ParkPlannerLogo.png',
+            fit: BoxFit.fill,
+          ),
+        ),
       ),
       body: isLoading
           ? const Center(
@@ -111,8 +133,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   child: Column(
                     children: [
                       TextFormField(
-                        decoration:
-                            const InputDecoration(labelText: 'Voornaam'),
+                        decoration: const InputDecoration(
+                            labelText: 'Voornaam',
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black))),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Geef astublieft uw voornaam op';
@@ -124,8 +148,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         },
                       ),
                       TextFormField(
-                        decoration:
-                            const InputDecoration(labelText: 'Achternaam'),
+                        decoration: const InputDecoration(
+                            labelText: 'Achternaam',
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black))),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Geef astublieft uw achternaam op';
@@ -137,7 +163,28 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         },
                       ),
                       TextFormField(
-                        decoration: const InputDecoration(labelText: 'Email'),
+                        decoration: const InputDecoration(
+                            labelText: 'Telefoonnummer',
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black))),
+                        keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value!.isEmpty || value.length != 9) {
+                            return 'Telefoonnummer moet 9 cijfers lang zijn';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          phoneNumber = value!;
+                        },
+                      ),
+                      TextFormField(
+                        decoration: const InputDecoration(
+                          labelText: 'E-mailadres',
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black),
+                          ),
+                        ),
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value!.isEmpty || !value.contains('@')) {
@@ -158,23 +205,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ),
                         ),
                       TextFormField(
-                        decoration:
-                            const InputDecoration(labelText: 'Telefoonnummer'),
-                        keyboardType: TextInputType.phone,
-                        validator: (value) {
-                          if (value!.isEmpty || value.length != 9) {
-                            return 'Telefoonnummer moet 9 cijfers lang zijn';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          phoneNumber = value!;
-                        },
-                      ),
-                      TextFormField(
                         obscureText: true,
-                        decoration:
-                            const InputDecoration(labelText: 'Wachtwoord'),
+                        decoration: const InputDecoration(
+                            labelText: 'Wachtwoord',
+                            border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black))),
                         validator: (value) {
                           if (value!.isEmpty || value.length < 7) {
                             return 'Wachtwoord moet minsten 7 karakters lang zijn';
@@ -188,7 +223,43 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: _submitForm,
-                        child: const Text('Maak account aan'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: const Text(
+                          'Aanmelden',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Heb je al een account? ',
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Log in',
+                                style: const TextStyle(
+                                  color: Colors.green,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.of(context)
+                                        .pushNamed('/user_login');
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ),
