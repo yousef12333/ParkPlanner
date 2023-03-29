@@ -21,14 +21,15 @@ class RegistrationPageState extends State<RegistrationPage> {
   late String email;
   late String phoneNumber;
   late String password;
-  final bool _obscureText = true;
-  final String _eyeImage =
-      'Eye_open.jpg'; //zorg ervoor dat de code hieronder werkt.
-  //void _toggleObscureText() {
-  // setState(() {
-  // _obscureText = !_obscureText;
-  //_eyeImage = _obscureText ? 'Eye_open.jpg' : 'Eye_closed.jpg';
-  //});
+  bool _obscureText = true;
+  String _eyeImage = 'Eye_open.jpg'; //zorg ervoor dat de code hieronder werkt.
+  void _toggleObscureText() {
+    setState(() {
+      _obscureText = !_obscureText;
+      _eyeImage = _obscureText ? 'Eye_open.jpg' : 'Eye_closed.jpg';
+    });
+  }
+
   bool isLoading = false;
   bool emailExists = false;
 
@@ -241,7 +242,7 @@ class RegistrationPageState extends State<RegistrationPage> {
                           suffixIcon: Padding(
                             padding: const EdgeInsets.only(right: 12.0),
                             child: InkWell(
-                              //onTap: _toggleObscureText,
+                              onTap: _toggleObscureText,
                               child: Image.asset(
                                 _eyeImage,
                                 width: 10.0,
