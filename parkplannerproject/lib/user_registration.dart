@@ -8,11 +8,10 @@ class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _RegistrationPageState createState() => _RegistrationPageState();
+  RegistrationPageState createState() => RegistrationPageState();
 }
 
-class _RegistrationPageState extends State<RegistrationPage> {
+class RegistrationPageState extends State<RegistrationPage> {
   final formKey = GlobalKey<FormState>();
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
@@ -22,7 +21,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
   late String email;
   late String phoneNumber;
   late String password;
-
+  final bool _obscureText = true;
+  final String _eyeImage =
+      'Eye_open.jpg'; //zorg ervoor dat de code hieronder werkt.
+  //void _toggleObscureText() {
+  // setState(() {
+  // _obscureText = !_obscureText;
+  //_eyeImage = _obscureText ? 'Eye_open.jpg' : 'Eye_closed.jpg';
+  //});
   bool isLoading = false;
   bool emailExists = false;
 
@@ -64,9 +70,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         'email': email,
         'phoneNumber': phoneNumber,
       }); //voeg nog encrypted password aan toe
-
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacementNamed(context, '/emptyPage');
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/login');
     } catch (error) {
       setState(() {
         isLoading = false;
@@ -97,41 +102,60 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text(
-              'Creëer je account',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: Colors.white,
-        leading: SizedBox(
-          width: 80,
-          height: 30,
-          child: Image.asset(
-            '/ParkPlannerLogo.png',
-            fit: BoxFit.fill,
-          ),
-        ),
-      ),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                child: Form(
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).padding.top,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(255, 222, 222, 222)
+                            .withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  margin: EdgeInsets.zero,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 120,
+                        height: 22,
+                        child: Image.asset(
+                          '/ParkPlannerLogo.png',
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Creëer je account',
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Form(
                   key: formKey,
                   child: Column(
                     children: [
+                      const SizedBox(height: 10),
                       TextFormField(
                         decoration: const InputDecoration(
                             labelText: 'Voornaam',
@@ -147,6 +171,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           firstName = value!;
                         },
                       ),
+                      const SizedBox(height: 10),
                       TextFormField(
                         decoration: const InputDecoration(
                             labelText: 'Achternaam',
@@ -162,6 +187,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           lastName = value!;
                         },
                       ),
+                      const SizedBox(height: 10),
                       TextFormField(
                         decoration: const InputDecoration(
                             labelText: 'Telefoonnummer',
@@ -178,6 +204,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           phoneNumber = value!;
                         },
                       ),
+                      const SizedBox(height: 10),
                       TextFormField(
                         decoration: const InputDecoration(
                           labelText: 'E-mailadres',
@@ -204,12 +231,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             style: TextStyle(color: Colors.red),
                           ),
                         ),
+                      const SizedBox(height: 10),
                       TextFormField(
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                            labelText: 'Wachtwoord',
-                            border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black))),
+                        obscureText: _obscureText,
+                        decoration: InputDecoration(
+                          labelText: 'Wachtwoord',
+                          border: const OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)),
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: InkWell(
+                              //onTap: _toggleObscureText,
+                              child: Image.asset(
+                                _eyeImage,
+                                width: 10.0,
+                                height: 10.0,
+                              ),
+                            ),
+                          ),
+                        ),
                         validator: (value) {
                           if (value!.isEmpty || value.length < 7) {
                             return 'Wachtwoord moet minsten 7 karakters lang zijn';
@@ -253,8 +293,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.of(context)
-                                        .pushNamed('/user_login');
+                                    Navigator.of(context).pushNamed('/login');
                                   },
                               ),
                             ],
@@ -264,7 +303,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ],
                   ),
                 ),
-              ),
+              ],
             ),
     );
   }
