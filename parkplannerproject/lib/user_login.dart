@@ -15,13 +15,22 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscureText = true;
+  String _eyeImage = 'Eye_open.jpg';
+
+  void _toggleObscureText() {
+    setState(() {
+      _obscureText = !_obscureText;
+      _eyeImage = _obscureText ? 'Eye_open.jpg' : 'Eye_closed.jpg';
+    });
+  }
 
   void _signIn() async {
     try {
       setState(() {
         _isLoading = true;
       });
-
+      //die warning stelt niks voor, het werkt gewoon
       final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
@@ -126,6 +135,9 @@ class _LoginPageState extends State<LoginPage> {
                               keyboardType: TextInputType.emailAddress,
                               decoration: const InputDecoration(
                                 labelText: 'Email',
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
                               ),
                               validator: (value) {
                                 if (value!.isEmpty || !value.contains('@')) {
@@ -134,14 +146,26 @@ class _LoginPageState extends State<LoginPage> {
                                 return null;
                               },
                             ),
-                            const SizedBox(
-                              height: 16.0,
-                            ),
+                            const SizedBox(height: 16),
                             TextFormField(
                               controller: _passwordController,
-                              obscureText: true,
-                              decoration: const InputDecoration(
+                              obscureText: _obscureText,
+                              decoration: InputDecoration(
                                 labelText: 'Wachtwoord',
+                                border: const OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.black)),
+                                suffixIcon: Padding(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  child: InkWell(
+                                    onTap: _toggleObscureText,
+                                    child: Image.asset(
+                                      _eyeImage,
+                                      width: 10.0,
+                                      height: 10.0,
+                                    ),
+                                  ),
+                                ),
                               ),
                               validator: (value) {
                                 if (value!.isEmpty || value.length < 7) {
