@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:parkplannerproject/user_registration.dart';
 import 'package:parkplannerproject/user_login.dart';
 import 'firebase_options.dart';
+import 'package:parkplannerproject/homepage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,8 @@ class MainApp extends StatelessWidget {
       initialRoute: '/register',
       routes: {
         '/register': (context) => const RegistrationPage(),
-        '/login': (context) => const UserLoginPage(),
+        '/login': (context) => const LoginPage(),
+        '/home': (context) => const HomePage(),
       },
     );
   }

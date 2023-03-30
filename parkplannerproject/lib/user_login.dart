@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class UserLoginPage extends StatelessWidget {
-  const UserLoginPage({Key? key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
-  @override //later in andere branch maken
+  @override
+  // ignore: library_private_types_in_public_api
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('User Login'),
-      ),
-      body: const Center(
-        child: Text('Welcome to the User Login Page!'),
-      ),
-    );
+    // TODO: implement build
+    throw UnimplementedError();
   }
 }
