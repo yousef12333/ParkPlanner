@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:parkplannerproject/user_registration.dart';
 import 'package:parkplannerproject/user_login.dart';
+import 'car_add.dart';
 import 'firebase_options.dart';
 import 'package:parkplannerproject/homepage.dart';
 
@@ -25,6 +26,7 @@ class MainApp extends StatelessWidget {
         '/register': (context) => const RegistrationPage(),
         '/login': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
+        '/addcar': (context) => const CarAddPage(),
       },
     );
   }
