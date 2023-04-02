@@ -67,55 +67,113 @@ class _CarAddPageState extends State<CarAddPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Voeg een wagen toe')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: formKey,
-          child: ListView(
-            children: [
-              TextFormField(
-                decoration:
-                    const InputDecoration(labelText: 'Kentekenplaatnummer'),
-                onSaved: (value) => licensePlateNumber = value!,
-                validator: (value) =>
-                    value!.isEmpty ? 'Geef een kentekenplaatnummer in!' : null,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Merk'),
-                onSaved: (value) => brand = value!,
-                validator: (value) =>
-                    value!.isEmpty ? 'Geef een merk in!' : null,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Model'),
-                onSaved: (value) => model = value!,
-                validator: (value) =>
-                    value!.isEmpty ? 'Geef een model in' : null,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Bijnaam'),
-                onSaved: (value) => nickname = value!,
-                validator: (value) =>
-                    value!.isEmpty ? 'Geef een bijnaam in' : null,
-              ),
-              if (!_emailDoesNotExist)
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('Bewaren'),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).padding.top,
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color:
+                      const Color.fromARGB(255, 222, 222, 222).withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3),
                 ),
-              if (_emailDoesNotExist)
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(
-                    'Email niet gevonden. Logt u alstublieft in.',
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.error),
+              ],
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            margin: EdgeInsets.zero,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 120,
+                  height: 22,
+                  child: Image.asset(
+                    '/ParkPlannerLogo.png',
+                    fit: BoxFit.fill,
                   ),
                 ),
-            ],
+                const SizedBox(width: 10),
+                const Text(
+                  'Voeg een wagen toe',
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+          const SizedBox(height: 15),
+          TextFormField(
+            decoration: const InputDecoration(
+                labelText: 'Kentekenplaatnummer',
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black))),
+            onSaved: (value) => licensePlateNumber = value!,
+            validator: (value) =>
+                value!.isEmpty ? 'Geef een kentekenplaatnummer in!' : null,
+          ),
+          const SizedBox(height: 15),
+          TextFormField(
+            decoration: const InputDecoration(
+                labelText: 'Merk',
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black))),
+            onSaved: (value) => brand = value!,
+            validator: (value) => value!.isEmpty ? 'Geef een merk in!' : null,
+          ),
+          const SizedBox(height: 15),
+          TextFormField(
+            decoration: const InputDecoration(
+                labelText: 'Model',
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black))),
+            onSaved: (value) => model = value!,
+            validator: (value) => value!.isEmpty ? 'Geef een model in' : null,
+          ),
+          const SizedBox(height: 15),
+          TextFormField(
+            decoration: const InputDecoration(
+                labelText: 'Bijnaam',
+                border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black))),
+            onSaved: (value) => nickname = value!,
+            validator: (value) => value!.isEmpty ? 'Geef een bijnaam in' : null,
+          ),
+          const SizedBox(height: 15),
+          if (!_emailDoesNotExist)
+            ElevatedButton(
+              onPressed: _submitForm,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: const Text(
+                'Bewaren',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          if (_emailDoesNotExist)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(
+                'Email niet gevonden. Logt u alstublieft in.',
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
+              ),
+            ),
+        ],
       ),
     );
   }
