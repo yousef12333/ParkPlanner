@@ -12,6 +12,11 @@ dependencies:
   firebase_core: ^2.8.0
   flutter:
     sdk: flutter
+  geocoding: ^2.1.0
+  geolocator: ^9.0.2
+  latlng: ^0.2.1
+  logger: ^1.3.0
+  geocoder: ^0.2.1
 
 dev_dependencies:
   flutter_test:

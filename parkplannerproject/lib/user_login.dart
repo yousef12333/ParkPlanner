@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
         password: _passwordController.text.trim(),
       );
       if (!mounted) return;
-      Navigator.of(context).pushReplacementNamed('/addcar');
+      Navigator.of(context).pushReplacementNamed('/home');
     } on FirebaseAuthException catch (error) {
       String message = '';
       if (error.code == 'user-not-found') {

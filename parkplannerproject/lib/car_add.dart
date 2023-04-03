@@ -108,6 +108,24 @@ class _CarAddPageState extends State<CarAddPage> {
                     color: Colors.green,
                   ),
                 ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/home');
+                    },
+                    child: const Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        'Annuleren',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -174,6 +192,47 @@ class _CarAddPageState extends State<CarAddPage> {
               ),
             ),
         ],
+      ),
+      bottomNavigationBar: SizedBox(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () {
+                Navigator.pushNamed(context, '/home');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline),
+              onPressed: () {
+                Navigator.pushNamed(context, '/addcar');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline),
+              onPressed: () {
+                Navigator.pushNamed(context, '/addcar');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline),
+              onPressed: () {
+                Navigator.pushNamed(context, '/addcar');
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
