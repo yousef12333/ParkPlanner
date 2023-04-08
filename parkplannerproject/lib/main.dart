@@ -28,6 +28,7 @@ class MainApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
         '/addcar': (context) => const CarAddPage(),
+        '/addparking': (context) => const ParkingAdd(),
       },
     );
   }
