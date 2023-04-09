@@ -20,6 +20,7 @@ class _ParkingAddState extends State<ParkingAdd> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _durationController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   LatLng? _selectedLocation;
   String _countryCity = '';
 
@@ -146,15 +147,27 @@ class _ParkingAddState extends State<ParkingAdd> {
               _countryCity,
               style: const TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 16),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: TextFormField(
                 controller: _durationController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'Hoeveel uur openstellen als parkeerplaats?',
-                  border: OutlineInputBorder(),
+                  labelText: 'Aantal uur parkeerplaats openstellen',
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextFormField(
+                controller: _descriptionController,
+                maxLines: null,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black)),
+                  labelText: 'Extra beschrijving',
                 ),
               ),
             ),
@@ -271,14 +284,17 @@ class _ParkingAddState extends State<ParkingAdd> {
         'longitude': _selectedLocation!.longitude,
         'duration': duration,
         'created_at': FieldValue.serverTimestamp(),
+        'description': _descriptionController.text,
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Parking space added successfully')),
+        const SnackBar(content: Text('Parkeerplaats succesvol toegevoegd')),
       );
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to add parking space: $error')),
+        SnackBar(
+            content: Text(
+                'Het is niet gelukt om een parkeerplaats toe te voegen: $error')),
       );
     }
   }
