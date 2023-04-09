@@ -69,7 +69,13 @@ class _ParkingAddState extends State<ParkingAdd> {
         child: Column(
           children: [
             const SizedBox(height: 16),
-            const Text('Selecteer locatie:', style: TextStyle(fontSize: 18)),
+            const Text(
+              'Selecteer locatie:',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.green,
+              ),
+            ),
             const SizedBox(height: 16),
             SizedBox(
               height: 300,
@@ -105,18 +111,31 @@ class _ParkingAddState extends State<ParkingAdd> {
                   Positioned(
                     top: 10,
                     right: 10,
-                    child: Column(
-                      children: [
-                        FloatingActionButton(
-                          onPressed: _zoomIn,
-                          child: const Icon(Icons.zoom_in),
-                        ),
-                        const SizedBox(height: 10),
-                        FloatingActionButton(
-                          onPressed: _zoomOut,
-                          child: const Icon(Icons.zoom_out),
-                        ),
-                      ],
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          FloatingActionButton(
+                            onPressed: _zoomIn,
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(Icons.zoom_in),
+                          ),
+                          const SizedBox(height: 10),
+                          FloatingActionButton(
+                            onPressed: _zoomOut,
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(Icons.zoom_out),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -142,7 +161,14 @@ class _ParkingAddState extends State<ParkingAdd> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _submitParkingSpace,
-              child: const Text('Bewaar'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child:
+                  const Text('Bewaar', style: TextStyle(color: Colors.white)),
             ),
             const SizedBox(height: 16),
           ],
