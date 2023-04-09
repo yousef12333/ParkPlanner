@@ -34,14 +34,42 @@ class _ParkingAddState extends State<ParkingAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Parking Space'),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 120,
+                height: 22,
+                child: Image.asset(
+                  '/ParkPlannerLogo.png',
+                  fit: BoxFit.fill,
+                ),
+              ),
+              const SizedBox(width: 10),
+              const Text(
+                'Voeg een parkeerplaats toe',
+                style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.white,
+          elevation: 5,
+          centerTitle: false,
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             const SizedBox(height: 16),
-            const Text('Select Location:', style: TextStyle(fontSize: 18)),
+            const Text('Selecteer locatie:', style: TextStyle(fontSize: 18)),
             const SizedBox(height: 16),
             SizedBox(
               height: 300,
@@ -59,7 +87,6 @@ class _ParkingAddState extends State<ParkingAdd> {
                             'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                         subdomains: const ['a', 'b', 'c'],
                       ),
-                      // Add a marker layer to the map
                       MarkerLayer(
                         markers: [
                           if (_selectedLocation != null)
@@ -69,7 +96,6 @@ class _ParkingAddState extends State<ParkingAdd> {
                             ),
                         ],
                       ),
-                      // Add a tap handler to the map
                       GestureDetector(
                         onTapUp: (details) => _selectLocation(details),
                         behavior: HitTestBehavior.translucent,
@@ -108,7 +134,7 @@ class _ParkingAddState extends State<ParkingAdd> {
                 controller: _durationController,
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: 'Duration (hours)',
+                  labelText: 'Hoeveel uur openstellen als parkeerplaats?',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -116,7 +142,7 @@ class _ParkingAddState extends State<ParkingAdd> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _submitParkingSpace,
-              child: const Text('Submit Parking Space'),
+              child: const Text('Bewaar'),
             ),
             const SizedBox(height: 16),
           ],
@@ -146,19 +172,16 @@ class _ParkingAddState extends State<ParkingAdd> {
     const double centerScreenLatitude = 51.2194;
     const double centerScreenLongitude = 4.4025;
 
-    // Calculate the distance from the center of the screen to the top-left corner
     final double diagonalDistance =
         sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
     final double distanceFromCenter = diagonalDistance / 2.0;
 
-    // Calculate the latitude and longitude of the top-left corner of the screen
     final double topLeftLatitude =
         centerScreenLatitude + (distanceFromCenter * cos(pi / 4)) / 111319.9;
     final double topLeftLongitude = centerScreenLongitude -
         (distanceFromCenter * sin(pi / 4)) /
             (111319.9 * cos(centerScreenLatitude));
 
-    // Calculate the latitude and longitude of the tapped location
     final double tappedLatitude = topLeftLatitude -
         (height / screenHeight) * (diagonalDistance / 111319.9);
     final double tappedLongitude = topLeftLongitude +
@@ -196,7 +219,8 @@ class _ParkingAddState extends State<ParkingAdd> {
     if (_selectedLocation == null || duration == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please select a location and enter a valid duration'),
+          content:
+              Text('Selecteer alsjeblieft een locatie en de hoeveelheid tijd'),
         ),
       );
       return;
@@ -207,7 +231,8 @@ class _ParkingAddState extends State<ParkingAdd> {
     if (user == null || user.email == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please sign in to add a parking space'),
+          content: Text(
+              'Log alsjeblieft eerst in om een parkeerplaats toe te voegen'),
         ),
       );
       return;
