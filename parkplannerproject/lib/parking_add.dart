@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,10 +22,16 @@ class _ParkingAddState extends State<ParkingAdd> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final _streetController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _countryController = TextEditingController();
+  final _houseNumberController = TextEditingController();
+  final _postalCodeController = TextEditingController();
+
   LatLng? _selectedLocation;
   String _countryCity = '';
 
-  MapController _mapController = MapController();
+  final MapController _mapController = MapController();
 
   @override
   void dispose() {
@@ -148,7 +155,57 @@ class _ParkingAddState extends State<ParkingAdd> {
               style: const TextStyle(fontSize: 16),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(3.0),
+              child: TextFormField(
+                controller: _streetController,
+                decoration: const InputDecoration(
+                  labelText: 'Straatnaam',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: TextFormField(
+                controller: _houseNumberController,
+                decoration: const InputDecoration(
+                  labelText: 'Huisnummer',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: TextFormField(
+                controller: _postalCodeController,
+                decoration: const InputDecoration(
+                  labelText: 'Postcode',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: TextFormField(
+                controller: _cityController,
+                decoration: const InputDecoration(
+                  labelText: 'Woonplaats',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: TextFormField(
+                controller: _countryController,
+                decoration: const InputDecoration(
+                  labelText: 'Land',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
               child: TextFormField(
                 controller: _durationController,
                 keyboardType: TextInputType.number,
@@ -160,7 +217,7 @@ class _ParkingAddState extends State<ParkingAdd> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(3.0),
               child: TextFormField(
                 controller: _descriptionController,
                 maxLines: null,
@@ -251,19 +308,50 @@ class _ParkingAddState extends State<ParkingAdd> {
     }
   }
 
-  Future<void> _submitParkingSpace() async {
+  Future<LatLng?> geocodeAddress(String address) async {
+    final response = await http.get(Uri.parse(
+        'https://nominatim.openstreetmap.org/search?q=$address&format=json&addressdetails=1&limit=1'));
+
+    if (response.statusCode == 200) {
+      final results = jsonDecode(response.body) as List<dynamic>;
+
+      if (results.isNotEmpty) {
+        final result = results.first;
+        final lat = double.parse(result['lat']);
+        final lon = double.parse(result['lon']);
+        return LatLng(lat, lon);
+      }
+    }
+
+    return null;
+  }
+
+  void _submitParkingSpace() async {
     final durationText = _durationController.text;
     final duration = int.tryParse(durationText);
 
-    if (_selectedLocation == null || duration == null) {
+    if (duration == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content:
-              Text('Selecteer alsjeblieft een locatie en de hoeveelheid tijd'),
+          content: Text('Selecteer alsjeblieft de hoeveelheid tijd'),
         ),
       );
       return;
     }
+
+    final address =
+        '${_countryController.text}, ${_postalCodeController.text} ${_cityController.text}, ${_streetController.text} ${_houseNumberController.text}';
+    final selectedLocation = await geocodeAddress(address);
+
+    if (selectedLocation != null) {
+      setState(() {
+        _selectedLocation = selectedLocation;
+      });
+      _mapController.move(_selectedLocation!, _mapController.zoom);
+    }
+
+    // Move the map to the selected location
+    _mapController.move(selectedLocation!, _mapController.zoom);
 
     final user = _auth.currentUser;
 
