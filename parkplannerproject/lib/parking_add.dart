@@ -204,6 +204,12 @@ class _ParkingAddState extends State<ParkingAdd> {
                 ),
               ),
             ),
+            ElevatedButton(
+              onPressed: () {
+                _updateSelectedLocation();
+              },
+              child: const Text('Update de map'),
+            ),
             Padding(
               padding: const EdgeInsets.all(3.0),
               child: TextFormField(
@@ -248,59 +254,48 @@ class _ParkingAddState extends State<ParkingAdd> {
   }
 
   void _zoomIn() {
-    final currentZoom = _mapController.zoom;
-    _mapController.move(_mapController.center, currentZoom + 1);
+    _mapController.move(_mapController.center, _mapController.zoom + 1);
   }
 
   void _zoomOut() {
-    final currentZoom = _mapController.zoom;
-    _mapController.move(_mapController.center, currentZoom - 1);
+    _mapController.move(_mapController.center, _mapController.zoom - 1);
   }
 
   // momenteel redelijk innacuraat, maar dat komt omdat de coordinaten van de map niet overeenkomen met de coordinaten van de echte wereld
   Future<void> _selectLocation(TapUpDetails details) async {
-    final double width = details.localPosition.dx;
-    final double height = details.localPosition.dy;
-
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
-
-    const double centerScreenLatitude = 51.2194;
-    const double centerScreenLongitude = 4.4025;
-
-    final double diagonalDistance =
+    final width = details.localPosition.dx;
+    final height = details.localPosition.dy;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    const centerScreenLatitude = 51.2194;
+    const centerScreenLongitude = 4.4025;
+    final diagonalDistance =
         sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
-    final double distanceFromCenter = diagonalDistance / 2.0;
-
-    final double topLeftLatitude =
+    final distanceFromCenter = diagonalDistance / 2.0;
+    final topLeftLatitude =
         centerScreenLatitude + (distanceFromCenter * cos(pi / 4)) / 111319.9;
-    final double topLeftLongitude = centerScreenLongitude -
+    final topLeftLongitude = centerScreenLongitude -
         (distanceFromCenter * sin(pi / 4)) /
             (111319.9 * cos(centerScreenLatitude));
-
-    final double tappedLatitude = topLeftLatitude -
+    final tappedLatitude = topLeftLatitude -
         (height / screenHeight) * (diagonalDistance / 111319.9);
-    final double tappedLongitude = topLeftLongitude +
+    final tappedLongitude = topLeftLongitude +
         (width / screenWidth) *
             (diagonalDistance / (111319.9 * cos(tappedLatitude)));
-
-    final LatLng selectedLocation = LatLng(tappedLatitude, tappedLongitude);
-
+    final selectedLocation = LatLng(tappedLatitude, tappedLongitude);
     final response = await http.get(Uri.parse(
         'https://nominatim.openstreetmap.org/reverse?lat=${selectedLocation.latitude}&lon=${selectedLocation.longitude}&format=jsonv2'));
-
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body);
-      final String country = json['address']['country'] ?? '';
-      final String city = json['address']['city'] ??
+      final country = json['address']['country'] ?? '';
+      final city = json['address']['city'] ??
           json['address']['town'] ??
           json['address']['village'] ??
           '';
-      final String street = json['address']['road'] ?? '';
-      final String houseNumber = json['address']['house_number'] ?? '';
-      final String postcode = json['address']['postcode'] ?? '';
-
-      final String address = '$country, $postcode $city, $street $houseNumber';
+      final street = json['address']['road'] ?? '';
+      final houseNumber = json['address']['house_number'] ?? '';
+      final postcode = json['address']['postcode'] ?? '';
+      final address = '$country, $postcode $city, $street $houseNumber';
       setState(() {
         _selectedLocation = selectedLocation;
         _countryCity = address;
@@ -308,13 +303,27 @@ class _ParkingAddState extends State<ParkingAdd> {
     }
   }
 
+  Future<void> _updateSelectedLocation() async {
+    final address =
+        '${_countryController.text}, ${_postalCodeController.text} ${_cityController.text}, ${_streetController.text} ${_houseNumberController.text}';
+    final selectedLocation = await geocodeAddress(address);
+    if (selectedLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Adres niet gevonden. Probeer het opnieuw.')));
+      return;
+    }
+    setState(() {
+      _selectedLocation = selectedLocation;
+      _countryCity = address;
+    });
+    _mapController.move(_selectedLocation!, _mapController.zoom);
+  }
+
   Future<LatLng?> geocodeAddress(String address) async {
     final response = await http.get(Uri.parse(
         'https://nominatim.openstreetmap.org/search?q=$address&format=json&addressdetails=1&limit=1'));
-
     if (response.statusCode == 200) {
       final results = jsonDecode(response.body) as List<dynamic>;
-
       if (results.isNotEmpty) {
         final result = results.first;
         final lat = double.parse(result['lat']);
@@ -322,7 +331,6 @@ class _ParkingAddState extends State<ParkingAdd> {
         return LatLng(lat, lon);
       }
     }
-
     return null;
   }
 
@@ -333,34 +341,23 @@ class _ParkingAddState extends State<ParkingAdd> {
     if (duration == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Selecteer alsjeblieft de hoeveelheid tijd'),
-        ),
+            content: Text('Selecteer alsjeblieft de hoeveelheid tijd')),
       );
       return;
     }
 
-    final address =
-        '${_countryController.text}, ${_postalCodeController.text} ${_cityController.text}, ${_streetController.text} ${_houseNumberController.text}';
-    final selectedLocation = await geocodeAddress(address);
+    await _updateSelectedLocation();
 
-    if (selectedLocation != null) {
-      setState(() {
-        _selectedLocation = selectedLocation;
-      });
-      _mapController.move(_selectedLocation!, _mapController.zoom);
-    }
+    if (_selectedLocation == null) return;
 
-    // Move the map to the selected location
-    _mapController.move(selectedLocation!, _mapController.zoom);
+    _mapController.move(_selectedLocation!, _mapController.zoom);
 
     final user = _auth.currentUser;
-
     if (user == null || user.email == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-              'Log alsjeblieft eerst in om een parkeerplaats toe te voegen'),
-        ),
+            content: Text(
+                'Log alsjeblieft eerst in om een parkeerplaats toe te voegen')),
       );
       return;
     }
