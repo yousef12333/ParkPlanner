@@ -208,6 +208,12 @@ class _ParkingAddState extends State<ParkingAdd> {
               onPressed: () {
                 _updateSelectedLocation();
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
               child: const Text('Update de map'),
             ),
             Padding(
