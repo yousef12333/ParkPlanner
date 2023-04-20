@@ -44,33 +44,48 @@ class _ParkingAddState extends State<ParkingAdd> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 120,
-                height: 22,
-                child: Image.asset(
+        child: Container(
+          padding: EdgeInsets.zero,
+          margin: EdgeInsets.zero,
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            titleSpacing: 0.0,
+            title: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
                   '/ParkPlannerLogo.png',
+                  width: 110,
+                  height: 20,
                   fit: BoxFit.fill,
                 ),
-              ),
-              const SizedBox(width: 10),
-              const Text(
-                'Voeg een parkeerplaats toe',
-                style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+                const SizedBox(width: 9),
+                const Text(
+                  'Voeg een parkeerplaats toe',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: InkWell(
+                    child: IconButton(
+                      alignment: Alignment.centerRight,
+                      icon: const Icon(Icons.keyboard_return_rounded),
+                      color: Colors.green,
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/home');
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.white,
+            elevation: 5,
+            centerTitle: false,
           ),
-          backgroundColor: Colors.white,
-          elevation: 5,
-          centerTitle: false,
         ),
       ),
       body: SingleChildScrollView(
@@ -93,7 +108,10 @@ class _ParkingAddState extends State<ParkingAdd> {
                     mapController: _mapController,
                     options: MapOptions(
                       center: LatLng(51.2194, 4.4025),
-                      zoom: 8.0,
+                      zoom:
+                          8.0, //zie notepad file die je opgeslagen hebt in documenten of bureaublad
+                      onTap: (tapPosition, LatLng location) =>
+                          _selectLocation(location),
                     ),
                     children: [
                       TileLayer(
@@ -110,10 +128,10 @@ class _ParkingAddState extends State<ParkingAdd> {
                             ),
                         ],
                       ),
-                      GestureDetector(
-                        onTapUp: (details) => _selectLocation(details),
-                        behavior: HitTestBehavior.translucent,
-                      ),
+                      //  GestureDetector(
+                      //   onTapUp: (details) => _selectLocation(details as LatLng),//error
+                      //   behavior: HitTestBehavior.translucent,
+                      // ),
                     ],
                   ),
                   Positioned(
@@ -256,6 +274,41 @@ class _ParkingAddState extends State<ParkingAdd> {
           ],
         ),
       ),
+      bottomNavigationBar: SizedBox(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.home),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.pushNamed(context, '/home');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              icon: const Icon(Icons.directions_car),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.pushNamed(context, '/addcar');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_location),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.pushNamed(context, '/addparking');
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -267,28 +320,10 @@ class _ParkingAddState extends State<ParkingAdd> {
     _mapController.move(_mapController.center, _mapController.zoom - 1);
   }
 
+  //suggestie van leerkracht: gebruik ontap: https://docs.fleaflet.dev/usage/options/other-options
   // momenteel redelijk innacuraat, maar dat komt omdat de coordinaten van de map niet overeenkomen met de coordinaten van de echte wereld
-  Future<void> _selectLocation(TapUpDetails details) async {
-    final width = details.localPosition.dx;
-    final height = details.localPosition.dy;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-    const centerScreenLatitude = 51.2194;
-    const centerScreenLongitude = 4.4025;
-    final diagonalDistance =
-        sqrt(screenWidth * screenWidth + screenHeight * screenHeight);
-    final distanceFromCenter = diagonalDistance / 2.0;
-    final topLeftLatitude =
-        centerScreenLatitude + (distanceFromCenter * cos(pi / 4)) / 111319.9;
-    final topLeftLongitude = centerScreenLongitude -
-        (distanceFromCenter * sin(pi / 4)) /
-            (111319.9 * cos(centerScreenLatitude));
-    final tappedLatitude = topLeftLatitude -
-        (height / screenHeight) * (diagonalDistance / 111319.9);
-    final tappedLongitude = topLeftLongitude +
-        (width / screenWidth) *
-            (diagonalDistance / (111319.9 * cos(tappedLatitude)));
-    final selectedLocation = LatLng(tappedLatitude, tappedLongitude);
+  Future<void> _selectLocation(LatLng tappedLocation) async {
+    final selectedLocation = tappedLocation;
     final response = await http.get(Uri.parse(
         'https://nominatim.openstreetmap.org/reverse?lat=${selectedLocation.latitude}&lon=${selectedLocation.longitude}&format=jsonv2'));
     if (response.statusCode == 200) {

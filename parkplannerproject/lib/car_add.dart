@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -107,6 +108,18 @@ class _CarAddPageState extends State<CarAddPage> {
                     color: Colors.green,
                   ),
                 ),
+                Expanded(
+                  child: InkWell(
+                    child: IconButton(
+                      alignment: Alignment.centerRight,
+                      icon: const Icon(Icons.keyboard_return_rounded),
+                      color: Colors.green,
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/home');
+                      },
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -173,6 +186,41 @@ class _CarAddPageState extends State<CarAddPage> {
               ),
             ),
         ],
+      ),
+      bottomNavigationBar: SizedBox(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.home),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.pushNamed(context, '/home');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              icon: const Icon(Icons.directions_car),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.pushNamed(context, '/addcar');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              icon: const Icon(Icons.add_location),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.pushNamed(context, '/addparking');
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

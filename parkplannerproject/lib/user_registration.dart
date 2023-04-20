@@ -294,7 +294,8 @@ class RegistrationPageState extends State<RegistrationPage> {
                                 ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    Navigator.of(context).pushNamed('/login');
+                                    Navigator.of(context).pushNamed(
+                                        '/login'); //google the error en los op
                                   },
                               ),
                             ],

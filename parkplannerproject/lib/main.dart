@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:parkplannerproject/parking_add.dart';
@@ -20,15 +21,28 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ParkPlanner',
-      initialRoute: '/register',
-      routes: {
-        '/register': (context) => const RegistrationPage(),
-        '/login': (context) => const LoginPage(),
-        '/home': (context) => const HomePage(),
-        '/addcar': (context) => const CarAddPage(),
-        '/addparking': (context) => const ParkingAdd(),
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+        if (snapshot.hasData) {
+          return MaterialApp(
+            initialRoute: '/home',
+            routes: {
+              '/home': (context) => const HomePage(),
+              '/addcar': (context) => const CarAddPage(),
+              '/addparking': (context) => const ParkingAdd(),
+            },
+          );
+        } else {
+          return MaterialApp(
+            initialRoute: '/login',
+            routes: {
+              '/': (context) => const LoginPage(),
+              '/register': (context) => const RegistrationPage(),
+              '/login': (context) => const LoginPage(),
+            },
+          );
+        }
       },
     );
   }

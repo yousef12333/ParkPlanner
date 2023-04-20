@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -30,13 +31,12 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _isLoading = true;
       });
-      //die warning stelt niks voor, het werkt gewoon
-      final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
       if (!mounted) return;
-      Navigator.of(context).pushReplacementNamed('/addparking');
+      Navigator.of(context).pushNamed('/addcar');
     } on FirebaseAuthException catch (error) {
       String message = '';
       if (error.code == 'user-not-found') {
