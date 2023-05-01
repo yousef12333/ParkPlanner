@@ -320,8 +320,6 @@ class _ParkingAddState extends State<ParkingAdd> {
     _mapController.move(_mapController.center, _mapController.zoom - 1);
   }
 
-  //suggestie van leerkracht: gebruik ontap: https://docs.fleaflet.dev/usage/options/other-options
-  // momenteel redelijk innacuraat, maar dat komt omdat de coordinaten van de map niet overeenkomen met de coordinaten van de echte wereld
   Future<void> _selectLocation(LatLng tappedLocation) async {
     final selectedLocation = tappedLocation;
     final response = await http.get(Uri.parse(
@@ -341,6 +339,8 @@ class _ParkingAddState extends State<ParkingAdd> {
         _selectedLocation = selectedLocation;
         _countryCity = address;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Adres in map gevonden.')));
     }
   }
 
@@ -349,8 +349,8 @@ class _ParkingAddState extends State<ParkingAdd> {
         '${_countryController.text}, ${_postalCodeController.text} ${_cityController.text}, ${_streetController.text} ${_houseNumberController.text}';
     final selectedLocation = await geocodeAddress(address);
     if (selectedLocation == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Adres niet gevonden. Probeer het opnieuw.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Adres in input niet gevonden.')));
       return;
     }
     setState(() {
