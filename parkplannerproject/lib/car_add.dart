@@ -15,14 +15,14 @@ class CarAddPage extends StatefulWidget {
 class _CarAddPageState extends State<CarAddPage> {
   final formKey = GlobalKey<FormState>();
   final firestore = FirebaseFirestore.instance;
-  bool _emailDoesNotExist = false;
+  final user = FirebaseAuth.instance.currentUser;
 
   late String licensePlateNumber;
   late String brand;
   late String model;
   late String nickname;
 
-  void _submitForm() async {
+  void _submitForm() {
     final isValid = formKey.currentState?.validate();
 
     if (!isValid!) {
@@ -30,162 +30,145 @@ class _CarAddPageState extends State<CarAddPage> {
     }
 
     formKey.currentState?.save();
-    //aanmaken en gebruik van nieuwe tabel cars
     final carCollectionRef = firestore.collection('cars');
-    //controleren of de huidige user al bestaat in de database
-    final userEmail = FirebaseAuth.instance.currentUser!.email;
-    final userCollectionRef = firestore.collection('users');
-    final userSnapshot =
-        await userCollectionRef.where('email', isEqualTo: userEmail).get();
-    final emailExists = userSnapshot.docs.isNotEmpty;
-
-    //logging om te zien of het werkelijk werkt
-    debugPrint(emailExists.toString());
-    debugPrint(userEmail.toString());
-    if (!emailExists) {
-      setState(() {
-        _emailDoesNotExist = true;
-      });
-      return;
-    }
-    try {
-      await carCollectionRef.add({
-        'licensePlateNumber': licensePlateNumber,
-        'brand': brand,
-        'model': model,
-        'nickname': nickname,
-        'userEmail': userEmail,
-      });
-    } catch (error) {
-      if (kDebugMode) {
-        print(error);
-      }
-    }
+    final userEmail = user!.email;
+    carCollectionRef.add({
+      'licensePlateNumber': licensePlateNumber,
+      'brand': brand,
+      'model': model,
+      'nickname': nickname,
+      'userEmail': userEmail
+    });
   }
 
-//je moet inloggen als je dit pagina wilt gebruiken, anders geeft het error
-  @override
+//het werkt alleen als het pagina een appbar gebruikt.
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).padding.top,
-          ),
-          Container(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 120,
+              height: 22,
+              child: Image.asset(
+                '/ParkPlannerLogo.png',
+                fit: BoxFit.fill,
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Voeg een wagen toe',
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
+            Expanded(
+              child: InkWell(
+                child: IconButton(
+                  alignment: Alignment.centerRight,
+                  icon: const Icon(Icons.keyboard_return_rounded),
+                  color: Colors.green,
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(4),
+          child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.grey[300]!,
+                  width: 0.5,
+                ),
+              ),
               boxShadow: [
                 BoxShadow(
-                  color:
-                      const Color.fromARGB(255, 222, 222, 222).withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3),
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 1,
+                  blurRadius: 1,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            margin: EdgeInsets.zero,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 120,
-                  height: 22,
-                  child: Image.asset(
-                    '/ParkPlannerLogo.png',
-                    fit: BoxFit.fill,
+          ),
+        ),
+      ),
+      body: Form(
+        key: formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: const InputDecoration(
+                    labelText: 'Kentekenplaatnummer',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey))),
+                onSaved: (value) => licensePlateNumber = value!,
+                validator: (value) =>
+                    value!.isEmpty ? 'Geef een kentekenplaatnummer in!' : null,
+              ),
+              const SizedBox(height: 15),
+              TextFormField(
+                decoration: const InputDecoration(
+                    labelText: 'Merk',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black))),
+                onSaved: (value) => brand = value!,
+                validator: (value) =>
+                    value!.isEmpty ? 'Geef een merk in!' : null,
+              ),
+              const SizedBox(height: 15),
+              TextFormField(
+                decoration: const InputDecoration(
+                    labelText: 'Model',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black))),
+                onSaved: (value) => model = value!,
+                validator: (value) =>
+                    value!.isEmpty ? 'Geef een model in' : null,
+              ),
+              const SizedBox(height: 15),
+              TextFormField(
+                decoration: const InputDecoration(
+                    labelText: 'Bijnaam',
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black))),
+                onSaved: (value) => nickname = value!,
+                validator: (value) =>
+                    value!.isEmpty ? 'Geef een bijnaam in' : null,
+              ),
+              const SizedBox(height: 15),
+              ElevatedButton(
+                onPressed: _submitForm,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                const SizedBox(width: 10),
-                const Text(
-                  'Voeg een wagen toe',
+                child: const Text(
+                  'Bewaren',
                   style: TextStyle(
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    color: Colors.white,
                   ),
                 ),
-                Expanded(
-                  child: InkWell(
-                    child: IconButton(
-                      alignment: Alignment.centerRight,
-                      icon: const Icon(Icons.keyboard_return_rounded),
-                      color: Colors.green,
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/home');
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 15),
-          TextFormField(
-            decoration: const InputDecoration(
-                labelText: 'Kentekenplaatnummer',
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black))),
-            onSaved: (value) => licensePlateNumber = value!,
-            validator: (value) =>
-                value!.isEmpty ? 'Geef een kentekenplaatnummer in!' : null,
-          ),
-          const SizedBox(height: 15),
-          TextFormField(
-            decoration: const InputDecoration(
-                labelText: 'Merk',
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black))),
-            onSaved: (value) => brand = value!,
-            validator: (value) => value!.isEmpty ? 'Geef een merk in!' : null,
-          ),
-          const SizedBox(height: 15),
-          TextFormField(
-            decoration: const InputDecoration(
-                labelText: 'Model',
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black))),
-            onSaved: (value) => model = value!,
-            validator: (value) => value!.isEmpty ? 'Geef een model in' : null,
-          ),
-          const SizedBox(height: 15),
-          TextFormField(
-            decoration: const InputDecoration(
-                labelText: 'Bijnaam',
-                border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black))),
-            onSaved: (value) => nickname = value!,
-            validator: (value) => value!.isEmpty ? 'Geef een bijnaam in' : null,
-          ),
-          const SizedBox(height: 15),
-          if (!_emailDoesNotExist)
-            ElevatedButton(
-              onPressed: _submitForm,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
               ),
-              child: const Text(
-                'Bewaren',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          if (_emailDoesNotExist)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                'Email niet gevonden. Logt u alstublieft in.',
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
-              ),
-            ),
-        ],
+            ],
+          ),
+        ),
       ),
       bottomNavigationBar: SizedBox(
         height: 60,
