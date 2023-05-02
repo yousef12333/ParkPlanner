@@ -26,16 +26,20 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+//de delay is ook nodig voor de logout icon in homepage.dart
   void _signIn() async {
     try {
       setState(() {
         _isLoading = true;
       });
+
       FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
       if (!mounted) return;
+
+      await Future.delayed(Duration(seconds: 1));
       Navigator.of(context).pushNamed('/home');
     } on FirebaseAuthException catch (error) {
       String message = '';
