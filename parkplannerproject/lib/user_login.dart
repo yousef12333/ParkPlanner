@@ -39,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       if (!mounted) return;
 
-      await Future.delayed(Duration(seconds: 1));
+      //await Future.delayed(Duration(milliseconds: 1500));
       Navigator.of(context).pushNamed('/home');
     } on FirebaseAuthException catch (error) {
       String message = '';
@@ -213,6 +213,31 @@ class _LoginPageState extends State<LoginPage> {
                                         ..onTap = () {
                                           Navigator.of(context)
                                               .pushNamed('/register');
+                                        },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            GestureDetector(
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'Wilt u uw wachtwoord aanpassen? ',
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: 'Pas uw wachtwoord aan',
+                                      style: const TextStyle(
+                                        color: Colors.green,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          Navigator.of(context)
+                                              .pushNamed('/edit_password');
                                         },
                                     ),
                                   ],

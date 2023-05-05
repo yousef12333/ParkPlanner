@@ -35,6 +35,15 @@ class MainApp extends StatelessWidget {
               '/addcar': (context) => const CarAddPage(),
               '/addparking': (context) => const ParkingAdd(),
             },
+            onGenerateRoute: (settings) {
+              if (settings.name == '/login') {
+                return MaterialPageRoute(
+                  builder: (context) => LoginPage(),
+                  settings: settings,
+                );
+              }
+              return null;
+            },
           );
         } else {
           return MaterialApp(
@@ -44,6 +53,15 @@ class MainApp extends StatelessWidget {
               '/register': (context) => const RegistrationPage(),
               '/login': (context) => const LoginPage(),
               '/edit_password': (context) => const ChangePasswordPage(),
+            },
+            onGenerateRoute: (settings) {
+              if (settings.name == '/register') {
+                return MaterialPageRoute(
+                  builder: (context) => RegistrationPage(),
+                  settings: settings,
+                );
+              }
+              return null;
             },
           );
         }

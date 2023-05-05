@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({super.key});
+  const RegistrationPage({Key? key}) : super(key: key);
 
   @override
   RegistrationPageState createState() => RegistrationPageState();
@@ -72,7 +72,7 @@ class RegistrationPageState extends State<RegistrationPage> {
         'phoneNumber': phoneNumber,
       }); //voeg nog encrypted password aan toe
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushNamed(context, '/login');
     } catch (error) {
       setState(() {
         isLoading = false;
@@ -296,6 +296,31 @@ class RegistrationPageState extends State<RegistrationPage> {
                                   ..onTap = () {
                                     Navigator.of(context).pushNamed(
                                         '/login'); //google the error en los op
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Wilt u uw wachtwoord aanpassen? ',
+                            style: const TextStyle(
+                              color: Colors.black,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Pas uw wachtwoord aan',
+                                style: const TextStyle(
+                                  color: Colors.green,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    Navigator.of(context)
+                                        .pushNamed('/edit_password');
                                   },
                               ),
                             ],
