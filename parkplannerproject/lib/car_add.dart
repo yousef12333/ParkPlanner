@@ -32,7 +32,7 @@ class _CarAddPageState extends State<CarAddPage> {
 
   void _getThemePreference() async {
     final prefs = await SharedPreferences.getInstance();
-    final email = user?.email ?? 'guest'; 
+    final email = user?.email ?? 'guest';
     setState(() {
       _theme = prefs.getString('$email-theme') ?? _theme;
     });
@@ -40,7 +40,7 @@ class _CarAddPageState extends State<CarAddPage> {
 
   void _setThemePreference(String theme) async {
     final prefs = await SharedPreferences.getInstance();
-    final email = user?.email ?? 'guest'; 
+    final email = user?.email ?? 'guest';
     prefs.setString('$email-theme', theme);
   }
 
@@ -95,7 +95,7 @@ class _CarAddPageState extends State<CarAddPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
-                  width: 120,
+                  width: 130,
                   height: 22,
                   child: Image.asset(
                     '/ParkPlannerLogo.png',

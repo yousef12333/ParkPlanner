@@ -85,7 +85,7 @@ class _ParkingAddState extends State<ParkingAdd> {
           children: [
             Image.asset(
               '/ParkPlannerLogo.png',
-              width: 110,
+              width: 120,
               height: 20,
               fit: BoxFit.fill,
             ),
