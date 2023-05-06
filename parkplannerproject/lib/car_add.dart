@@ -22,7 +22,7 @@ class _CarAddPageState extends State<CarAddPage> {
   late String nickname;
   late String price;
 
-  String _theme = 'light'; // default theme is light
+  String _theme = 'light';
 
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _CarAddPageState extends State<CarAddPage> {
 
   void _getThemePreference() async {
     final prefs = await SharedPreferences.getInstance();
-    final email = user?.email ?? 'guest'; // fallback to guest email
+    final email = user?.email ?? 'guest'; 
     setState(() {
       _theme = prefs.getString('$email-theme') ?? _theme;
     });
@@ -40,7 +40,7 @@ class _CarAddPageState extends State<CarAddPage> {
 
   void _setThemePreference(String theme) async {
     final prefs = await SharedPreferences.getInstance();
-    final email = user?.email ?? 'guest'; // fallback to guest email
+    final email = user?.email ?? 'guest'; 
     prefs.setString('$email-theme', theme);
   }
 

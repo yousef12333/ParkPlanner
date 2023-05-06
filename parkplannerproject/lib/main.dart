@@ -38,7 +38,7 @@ class MainApp extends StatelessWidget {
             onGenerateRoute: (settings) {
               if (settings.name == '/login') {
                 return MaterialPageRoute(
-                  builder: (context) => LoginPage(),
+                  builder: (context) => const LoginPage(),
                   settings: settings,
                 );
               }
@@ -57,7 +57,7 @@ class MainApp extends StatelessWidget {
             onGenerateRoute: (settings) {
               if (settings.name == '/register') {
                 return MaterialPageRoute(
-                  builder: (context) => RegistrationPage(),
+                  builder: (context) => const RegistrationPage(),
                   settings: settings,
                 );
               }
