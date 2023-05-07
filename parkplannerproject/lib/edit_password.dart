@@ -3,19 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChangePasswordPage extends StatefulWidget {
-  const ChangePasswordPage({super.key});
+class EditPasswordPage extends StatefulWidget {
+  const EditPasswordPage({super.key});
 
   @override
-  _ChangePasswordPageState createState() => _ChangePasswordPageState();
+  _EditPasswordPageState createState() => _EditPasswordPageState();
 }
 
-class _ChangePasswordPageState extends State<ChangePasswordPage> {
+class _EditPasswordPageState extends State<EditPasswordPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _oldPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   bool _isLoading = false;
+  bool _obscureText = true;
+  bool _obscureTextNew = true;
+  String _eyeImage = 'Eye_open.jpg';
+  String _eyeImageNew = 'Eye_open.jpg';
+
+  void _toggleObscureText() {
+    setState(() {
+      _obscureText = !_obscureText;
+      _eyeImage = _obscureText ? 'Eye_open.jpg' : 'Eye_closed.jpg';
+    });
+  }
+
+  void _toggleObscureTextNew() {
+    setState(() {
+      _obscureTextNew = !_obscureTextNew;
+      _eyeImageNew = _obscureTextNew ? 'Eye_open.jpg' : 'Eye_closed.jpg';
+    });
+  }
 
   Future<void> _changePassword() async {
     try {
@@ -90,65 +108,63 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).padding.top,
+            : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                SizedBox(
+                  height: MediaQuery.of(context).padding.top,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(255, 222, 222, 222)
+                            .withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color.fromARGB(255, 222, 222, 222)
-                              .withOpacity(0.5),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset: const Offset(0, 3),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  margin: EdgeInsets.zero,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 120,
+                        height: 22,
+                        child: Image.asset(
+                          '/ParkPlannerLogo.png',
+                          fit: BoxFit.fill,
                         ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    margin: EdgeInsets.zero,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 120,
-                          height: 22,
-                          child: Image.asset(
-                            '/ParkPlannerLogo.png',
-                            fit: BoxFit.fill,
-                          ),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        '    Wachtwoord aanpassen',
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
                         ),
-                        const SizedBox(width: 10),
-                        const Text(
-                          '    Wachtwoord aanpassen',
-                          style: TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.bold,
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          child: IconButton(
+                            alignment: Alignment.centerRight,
+                            icon: const Icon(Icons.keyboard_return_rounded),
                             color: Colors.green,
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/login');
+                            },
                           ),
                         ),
-                        Expanded(
-                          child: InkWell(
-                            child: IconButton(
-                              alignment: Alignment.centerRight,
-                              icon: const Icon(Icons.keyboard_return_rounded),
-                              color: Colors.green,
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/login');
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Center(
-                      child: SingleChildScrollView(
-                          child: Padding(
+                ),
+                Center(
+                    child: SingleChildScrollView(
+                  child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Form(
                       key: _formKey,
@@ -172,11 +188,22 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _oldPasswordController,
-                            obscureText: true,
-                            decoration: const InputDecoration(
+                            obscureText: _obscureText,
+                            decoration: InputDecoration(
                               labelText: 'Oud wachtwoord',
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black)),
+                              suffixIcon: Padding(
+                                padding: EdgeInsets.only(right: 12.0),
+                                child: InkWell(
+                                  onTap: _toggleObscureText,
+                                  child: Image.asset(
+                                    _eyeImage,
+                                    width: 10.0,
+                                    height: 10.0,
+                                  ),
+                                ),
+                              ),
                             ),
                             validator: (value) {
                               if (value!.isEmpty || value.length < 7) {
@@ -188,11 +215,22 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           const SizedBox(height: 16),
                           TextFormField(
                             controller: _newPasswordController,
-                            obscureText: true,
-                            decoration: const InputDecoration(
+                            obscureText: _obscureTextNew,
+                            decoration: InputDecoration(
                               labelText: 'Nieuw wachtwoord',
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black)),
+                              suffixIcon: Padding(
+                                padding: EdgeInsets.only(right: 12.0),
+                                child: InkWell(
+                                  onTap: _toggleObscureTextNew,
+                                  child: Image.asset(
+                                    _eyeImageNew,
+                                    width: 10.0,
+                                    height: 10.0,
+                                  ),
+                                ),
+                              ),
                             ),
                             validator: (value) {
                               if (value!.isEmpty || value.length < 7) {
@@ -217,11 +255,179 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                               ),
                             ),
                           ),
+                          Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                  margin: const EdgeInsets.only(top: 25.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Flexible(
+                                        fit: FlexFit.tight,
+                                        child: Container(
+                                          constraints: const BoxConstraints(
+                                              minHeight: 130.0),
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pushNamed(
+                                                  '/edit_information');
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                IconButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                            '/edit_information');
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.person,
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                                const Text(
+                                                  'Wilt u uw gebruikersgegevens aanpassen?',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  child: const Text(
+                                                    'Wijzig gebruikersgegevens',
+                                                    style: TextStyle(
+                                                      color: Colors.green,
+                                                      fontSize: 12,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        fit: FlexFit.tight,
+                                        child: Container(
+                                          constraints: const BoxConstraints(
+                                              minHeight: 130.0),
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pushNamed('/register');
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                IconButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pushNamed('/register');
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.add_circle_outline,
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                                const Text(
+                                                  'Heeft u nog geen account?',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  child: const Text(
+                                                    'Creëer je account',
+                                                    style: TextStyle(
+                                                      color: Colors.green,
+                                                      fontSize: 12,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Flexible(
+                                        fit: FlexFit.tight,
+                                        child: Container(
+                                          constraints: const BoxConstraints(
+                                              minHeight: 130.0),
+                                          child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pushNamed('/edit_password');
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Colors.white,
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.0),
+                                              ),
+                                            ),
+                                            child: Column(
+                                              children: [
+                                                IconButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pushNamed(
+                                                            '/edit_password');
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.lock,
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                                const Text(
+                                                  'Wilt u uw wachtwoord aanpassen?',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  child: const Text(
+                                                    'Wijzig wachtwoord',
+                                                    style: TextStyle(
+                                                      color: Colors.green,
+                                                      fontSize: 12,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )))
                         ],
                       ),
                     ),
-                  )))
-                ],
-              ));
+                  ),
+                ))
+              ]));
   }
 }
