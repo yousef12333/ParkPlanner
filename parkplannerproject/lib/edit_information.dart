@@ -175,11 +175,11 @@ class _EditInformationPageState extends State<EditInformationPage> {
                               obscureText: _obscureText,
                               decoration: InputDecoration(
                                 labelText: 'Wachtwoord',
-                                border: OutlineInputBorder(
+                                border: const OutlineInputBorder(
                                     borderSide:
                                         BorderSide(color: Colors.black)),
                                 suffixIcon: Padding(
-                                  padding: EdgeInsets.only(right: 12.0),
+                                  padding: const EdgeInsets.only(right: 12.0),
                                   child: InkWell(
                                     onTap: _toggleObscureText,
                                     child: Image.asset(
