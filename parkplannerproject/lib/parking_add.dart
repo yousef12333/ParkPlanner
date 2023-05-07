@@ -74,7 +74,8 @@ class _ParkingAddState extends State<ParkingAdd> {
   Widget build(BuildContext context) {
     final isDarkTheme = _theme == 'dark';
     return Scaffold(
-      backgroundColor: isDarkTheme ? Colors.grey[900] : Colors.white,
+      backgroundColor:
+          isDarkTheme ? const Color.fromARGB(255, 52, 52, 52) : Colors.white,
       appBar: AppBar(
         backgroundColor: isDarkTheme ? Colors.grey[900] : Colors.white,
         elevation: 0,
@@ -211,15 +212,20 @@ class _ParkingAddState extends State<ParkingAdd> {
                   border: const OutlineInputBorder(),
                   enabledBorder: isDarkTheme
                       ? const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
                         )
                       : null,
                   labelStyle: TextStyle(
-                    color: isDarkTheme ? Colors.white : null,
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
                   ),
                 ),
                 style: TextStyle(
-                  color: isDarkTheme ? Colors.white : null,
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -232,15 +238,20 @@ class _ParkingAddState extends State<ParkingAdd> {
                   border: const OutlineInputBorder(),
                   enabledBorder: isDarkTheme
                       ? const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
                         )
                       : null,
                   labelStyle: TextStyle(
-                    color: isDarkTheme ? Colors.white : null,
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
                   ),
                 ),
                 style: TextStyle(
-                  color: isDarkTheme ? Colors.white : null,
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -253,15 +264,20 @@ class _ParkingAddState extends State<ParkingAdd> {
                   border: const OutlineInputBorder(),
                   enabledBorder: isDarkTheme
                       ? const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
                         )
                       : null,
                   labelStyle: TextStyle(
-                    color: isDarkTheme ? Colors.white : null,
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
                   ),
                 ),
                 style: TextStyle(
-                  color: isDarkTheme ? Colors.white : null,
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -274,15 +290,20 @@ class _ParkingAddState extends State<ParkingAdd> {
                   border: const OutlineInputBorder(),
                   enabledBorder: isDarkTheme
                       ? const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
                         )
                       : null,
                   labelStyle: TextStyle(
-                    color: isDarkTheme ? Colors.white : null,
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
                   ),
                 ),
                 style: TextStyle(
-                  color: isDarkTheme ? Colors.white : null,
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -295,15 +316,20 @@ class _ParkingAddState extends State<ParkingAdd> {
                   border: const OutlineInputBorder(),
                   enabledBorder: isDarkTheme
                       ? const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
                         )
                       : null,
                   labelStyle: TextStyle(
-                    color: isDarkTheme ? Colors.white : null,
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
                   ),
                 ),
                 style: TextStyle(
-                  color: isDarkTheme ? Colors.white : null,
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -333,15 +359,20 @@ class _ParkingAddState extends State<ParkingAdd> {
                   ),
                   enabledBorder: isDarkTheme
                       ? const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
                         )
                       : null,
                   labelStyle: TextStyle(
-                    color: isDarkTheme ? Colors.white : null,
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
                   ),
                 ),
                 style: TextStyle(
-                  color: isDarkTheme ? Colors.white : null,
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -359,15 +390,20 @@ class _ParkingAddState extends State<ParkingAdd> {
                   labelText: 'Extra beschrijving',
                   enabledBorder: isDarkTheme
                       ? const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
                         )
                       : null,
                   labelStyle: TextStyle(
-                    color: isDarkTheme ? Colors.white : null,
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
                   ),
                 ),
                 style: TextStyle(
-                  color: isDarkTheme ? Colors.white : null,
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
