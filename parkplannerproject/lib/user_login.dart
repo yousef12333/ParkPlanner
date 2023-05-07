@@ -39,7 +39,9 @@ class _LoginPageState extends State<LoginPage> {
       );
       if (!mounted) return;
 
-      //await Future.delayed(Duration(milliseconds: 1500));
+      await Future.delayed(Duration(
+          milliseconds:
+              2000)); //lost de error op door de generate meer tijd te geven
       Navigator.of(context).pushNamed('/home');
     } on FirebaseAuthException catch (error) {
       String message = '';

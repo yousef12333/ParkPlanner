@@ -5,6 +5,7 @@ import 'package:parkplannerproject/parking_add.dart';
 import 'package:parkplannerproject/user_registration.dart';
 import 'package:parkplannerproject/user_login.dart';
 import 'package:parkplannerproject/edit_password.dart';
+import 'package:parkplannerproject/edit_information.dart';
 import 'car_add.dart';
 import 'firebase_options.dart';
 import 'package:parkplannerproject/homepage.dart';
@@ -52,7 +53,8 @@ class MainApp extends StatelessWidget {
               '/': (context) => const LoginPage(),
               '/register': (context) => const RegistrationPage(),
               '/login': (context) => const LoginPage(),
-              '/edit_password': (context) => const ChangePasswordPage(),
+              '/edit_password': (context) => const EditPasswordPage(),
+              '/edit_information': (context) => const EditInformationPage(),
             },
             onGenerateRoute: (settings) {
               if (settings.name == '/register') {
