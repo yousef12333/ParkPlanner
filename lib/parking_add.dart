@@ -290,6 +290,16 @@ class _ParkingAddState extends State<ParkingAdd> {
               width: 20,
             ),
             IconButton(
+              icon: const Icon(Icons.person),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
               icon: const Icon(Icons.directions_car),
               color: Colors.green,
               onPressed: () {
