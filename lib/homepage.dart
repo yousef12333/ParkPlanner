@@ -231,45 +231,6 @@ class _HomePageState extends State<HomePage> {
 
 
 /* 
-//header with logo and title
- Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color.fromARGB(255, 222, 222, 222)
-                        .withOpacity(0.5),
-                    spreadRadius: 5.0,
-                    blurRadius: 7.0,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.symmetric(vertical: 10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 120.0,
-                    height: 22.0,
-                    child: Image.asset(
-                      'ParkPlannerLogo.png',
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    'Home',
-                    style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
 
             // rode circel
             /*CircleLayer(
