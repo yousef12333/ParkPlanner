@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -70,9 +71,10 @@ class RegistrationPageState extends State<RegistrationPage> {
         'lastName': lastName,
         'email': email,
         'phoneNumber': phoneNumber,
-      }); //voeg nog encrypted password aan toe
+      });
       if (!mounted) return;
       Navigator.pushNamed(context, '/login');
+      await FirebaseAuth.instance.signOut();
     } catch (error) {
       setState(() {
         isLoading = false;
@@ -193,6 +195,9 @@ class RegistrationPageState extends State<RegistrationPage> {
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black))),
                         keyboardType: TextInputType.phone,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
                         validator: (value) {
                           if (value!.isEmpty || value.length != 9) {
                             return 'Telefoonnummer moet 9 cijfers lang zijn';

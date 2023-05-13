@@ -112,14 +112,22 @@ class _CarAddPageState extends State<CarAddPage> {
                   ),
                 ),
                 Expanded(
-                  child: InkWell(
-                    child: IconButton(
-                      alignment: Alignment.centerRight,
-                      icon: const Icon(Icons.keyboard_return_rounded),
-                      color: Colors.green,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.transparent),
+                        overlayColor: MaterialStateProperty.all<Color>(
+                            Colors.transparent),
+                      ),
                       onPressed: () {
                         Navigator.pushNamed(context, '/home');
                       },
+                      child: Icon(
+                        Icons.keyboard_return_rounded,
+                        color: Colors.green,
+                      ),
                     ),
                   ),
                 ),

@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
 
       await Future.delayed(const Duration(
           milliseconds:
-              2000)); //lost de error op door de generate meer tijd te geven
+              3000)); //lost de error op door de generate meer tijd te geven
       Navigator.of(context).pushNamed('/home');
     } on FirebaseAuthException catch (error) {
       String message = '';

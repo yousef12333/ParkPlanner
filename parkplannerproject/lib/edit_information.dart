@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 class EditInformationPage extends StatefulWidget {
   const EditInformationPage({Key? key}) : super(key: key);
@@ -47,6 +48,8 @@ class _EditInformationPageState extends State<EditInformationPage> {
         'phoneNumber': _phoneNumberController.text.trim(),
       });
 
+      await FirebaseAuth.instance.signOut();
+
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -62,6 +65,9 @@ class _EditInformationPageState extends State<EditInformationPage> {
           ],
         ),
       );
+
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/login', (Route<dynamic> route) => false);
     } on FirebaseAuthException catch (error) {
       showDialog(
         context: context,
@@ -125,7 +131,7 @@ class _EditInformationPageState extends State<EditInformationPage> {
                       ),
                       const SizedBox(width: 10),
                       const Text(
-                        '  Gegevens aanpassen',
+                        'Gegevens aanpassen',
                         style: TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
@@ -133,14 +139,22 @@ class _EditInformationPageState extends State<EditInformationPage> {
                         ),
                       ),
                       Expanded(
-                        child: InkWell(
-                          child: IconButton(
-                            alignment: Alignment.centerRight,
-                            icon: const Icon(Icons.keyboard_return_rounded),
-                            color: Colors.green,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.transparent),
+                              overlayColor: MaterialStateProperty.all<Color>(
+                                  Colors.transparent),
+                            ),
                             onPressed: () {
                               Navigator.pushNamed(context, '/login');
                             },
+                            child: Icon(
+                              Icons.keyboard_return_rounded,
+                              color: Colors.green,
+                            ),
                           ),
                         ),
                       ),
@@ -229,6 +243,9 @@ class _EditInformationPageState extends State<EditInformationPage> {
                             TextFormField(
                               controller: _phoneNumberController,
                               keyboardType: TextInputType.phone,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
                               decoration: const InputDecoration(
                                 labelText: 'Telefoonnummer',
                                 border: OutlineInputBorder(),
@@ -236,6 +253,8 @@ class _EditInformationPageState extends State<EditInformationPage> {
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return 'Voer een telefoonnummer in';
+                                } else if (value.length != 9) {
+                                  return 'Telefoonnummer moet 9 cijfers lang zijn';
                                 }
                                 return null;
                               },

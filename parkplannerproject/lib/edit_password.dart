@@ -140,7 +140,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                       ),
                       const SizedBox(width: 10),
                       const Text(
-                        '    Wachtwoord aanpassen',
+                        'Wachtwoord aanpassen',
                         style: TextStyle(
                           fontSize: 19,
                           fontWeight: FontWeight.bold,
@@ -148,14 +148,22 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                         ),
                       ),
                       Expanded(
-                        child: InkWell(
-                          child: IconButton(
-                            alignment: Alignment.centerRight,
-                            icon: const Icon(Icons.keyboard_return_rounded),
-                            color: Colors.green,
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.transparent),
+                              overlayColor: MaterialStateProperty.all<Color>(
+                                  Colors.transparent),
+                            ),
                             onPressed: () {
                               Navigator.pushNamed(context, '/login');
                             },
+                            child: Icon(
+                              Icons.keyboard_return_rounded,
+                              color: Colors.green,
+                            ),
                           ),
                         ),
                       ),
@@ -191,10 +199,10 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                             obscureText: _obscureText,
                             decoration: InputDecoration(
                               labelText: 'Oud wachtwoord',
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black)),
                               suffixIcon: Padding(
-                                padding: EdgeInsets.only(right: 12.0),
+                                padding: const EdgeInsets.only(right: 12.0),
                                 child: InkWell(
                                   onTap: _toggleObscureText,
                                   child: Image.asset(
@@ -218,10 +226,10 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                             obscureText: _obscureTextNew,
                             decoration: InputDecoration(
                               labelText: 'Nieuw wachtwoord',
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.black)),
                               suffixIcon: Padding(
-                                padding: EdgeInsets.only(right: 12.0),
+                                padding: const EdgeInsets.only(right: 12.0),
                                 child: InkWell(
                                   onTap: _toggleObscureTextNew,
                                   child: Image.asset(
