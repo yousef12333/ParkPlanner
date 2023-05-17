@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class ParkingAdd extends StatefulWidget {
   const ParkingAdd({Key? key}) : super(key: key);
@@ -23,6 +24,10 @@ class _ParkingAddState extends State<ParkingAdd> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _startAtController = TextEditingController(
+    text: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+  );
+
   final _streetController = TextEditingController();
   final _cityController = TextEditingController();
   final _countryController = TextEditingController();
@@ -415,6 +420,48 @@ class _ParkingAddState extends State<ParkingAdd> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: TextFormField(
+                controller: _startAtController,
+                keyboardType: TextInputType.datetime,
+                decoration: InputDecoration(
+                  labelText: 'Vanaf welk tijd en datum staat uw ruimte open?',
+                  border: OutlineInputBorder(
+                    borderSide: isDarkTheme
+                        ? const BorderSide(color: Colors.white)
+                        : const BorderSide(color: Colors.black),
+                  ),
+                  enabledBorder: isDarkTheme
+                      ? const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
+                        )
+                      : null,
+                  labelStyle: TextStyle(
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
+                ),
+                validator: (value) {
+                  if (value == null || value == "") {
+                    return 'Voer alstublieft een datum in.';
+                  }
+                  try {
+                    DateTime.parse(value);
+                  } catch (e) {
+                    return 'Voer alstublieft een geldige datum in.';
+                  }
+                  return null;
+                },
+              ),
+            ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _submitParkingSpace,
@@ -575,7 +622,7 @@ class _ParkingAddState extends State<ParkingAdd> {
         'latitude': _selectedLocation!.latitude,
         'longitude': _selectedLocation!.longitude,
         'duration': duration,
-        'created_at': FieldValue.serverTimestamp(),
+        'start_at': _startAtController.text,
         'description': _descriptionController.text,
       });
 
