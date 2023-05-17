@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:parkplannerproject/user_registration.dart';
 
-String firstName = 'Sam';
-String lastName = 'John';
+import 'edit_password.dart';
+
+/*String firstName = RegistrationPageState().firstName;
+String lastName = RegistrationPageState().firstName;
+int phoneNumber = RegistrationPageState().phoneNumber as int;*/
+String firstName = "Jhon";
+String lastName = "Jo";
 String vehicleBrands = 'Mercedes';
-String email = 'samjohn52h@hotmail.com';
+int phoneNumber = 0032465207104;
 String homeAddress = 'Ruggenveldlaan, 799, 2100, Deurne';
 
 class ProfilePage extends StatefulWidget {
@@ -96,7 +102,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.directions_car),
+            leading: Icon(Icons.directions_car, color: Colors.green),
             title: Text('Vehicle Brands'),
             subtitle: Row(
               children: [
@@ -118,7 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         isEditing = false;
                       });
                     },
-                    icon: Icon(Icons.save),
+                    icon: Icon(Icons.save, color: Colors.green),
                   ),
                 if (!isEditing)
                   IconButton(
@@ -127,23 +133,23 @@ class _ProfilePageState extends State<ProfilePage> {
                         isEditing = true;
                       });
                     },
-                    icon: Icon(Icons.edit),
+                    icon: Icon(Icons.edit, color: Colors.green),
                   ),
               ],
             ),
           ),
           ListTile(
-            leading: Icon(Icons.email),
-            title: Text('Email'),
+            leading: Icon(Icons.phone, color: Colors.green),
+            title: Text('Telefoonnummer'),
             subtitle: Row(
               children: [
                 Expanded(
                   child: TextFormField(
-                    initialValue: email,
+                    initialValue: phoneNumber.toString(),
                     enabled: isEditing,
                     onChanged: (value) {
                       setState(() {
-                        email = value;
+                        phoneNumber = int.parse(value);
                       });
                     },
                   ),
@@ -155,7 +161,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         isEditing = false;
                       });
                     },
-                    icon: Icon(Icons.save),
+                    icon: Icon(Icons.save, color: Colors.green),
                   ),
                 if (!isEditing)
                   IconButton(
@@ -164,13 +170,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         isEditing = true;
                       });
                     },
-                    icon: Icon(Icons.edit),
+                    icon: Icon(Icons.edit, color: Colors.green),
                   ),
               ],
             ),
           ),
+
           ListTile(
-            leading: Icon(Icons.home),
+            leading: Icon(Icons.home, color: Colors.green),
             title: Text('Home Address'),
             subtitle: Row(
               children: [
@@ -192,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         isEditing = false;
                       });
                     },
-                    icon: Icon(Icons.save),
+                    icon: Icon(Icons.save, color: Colors.green),
                   ),
                 if (!isEditing)
                   IconButton(
@@ -201,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         isEditing = true;
                       });
                     },
-                    icon: Icon(Icons.edit),
+                    icon: Icon(Icons.edit, color: Colors.green),
                   ),
               ],
             ),
@@ -266,8 +273,87 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
           ),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'Bewerk Wachtwoord',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text('Wachtwoord wijzigen'),
+            trailing: Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.green,
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditPasswordPage()),
+              );
+            },
+          ),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Help en Ondersteuning',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Text(
+                  'Contact opnemen met klantenservice:',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
+                SizedBox(height: 8.0),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.phone,
+                      color: Colors.green, // Voeg een gewenste kleur toe
+                    ),
+                    SizedBox(width: 8.0),
+                    Text(
+                      '046522071',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.0),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.email,
+                      color: Colors.green, // Voeg een gewenste kleur toe
+                    ),
+                    SizedBox(width: 8.0),
+                    Text(
+                      'parkplanner@klantenservice.be',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
+
+      //Navigation
       bottomNavigationBar: SizedBox(
         height: 60,
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
