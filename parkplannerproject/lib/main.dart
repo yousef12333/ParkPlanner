@@ -49,7 +49,7 @@ class _MainAppState extends State<MainApp> {
   }
 
   void _startSignOutTimer() {
-    const expirationDuration = Duration(seconds: 500);
+    const expirationDuration = Duration(hours: 1);
     _signOutTimer = Timer(expirationDuration, () {
       FirebaseAuth.instance.signOut();
       showDialog(

@@ -20,7 +20,6 @@ class _CarAddPageState extends State<CarAddPage> {
   late String brand;
   late String model;
   late String nickname;
-  late String price;
 
   String _theme = 'light';
 
@@ -67,7 +66,6 @@ class _CarAddPageState extends State<CarAddPage> {
       'brand': brand,
       'model': model,
       'nickname': nickname,
-      'price': price,
       'userEmail': userEmail
     }).then((value) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -200,26 +198,6 @@ class _CarAddPageState extends State<CarAddPage> {
                     onSaved: (value) => nickname = value!,
                     validator: (value) =>
                         value!.isEmpty ? 'Geef een bijnaam in' : null,
-                  ),
-                  const SizedBox(height: 15),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      labelText: 'Prijs',
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                    ),
-                    keyboardType: TextInputType.number,
-                    onSaved: (value) => price = value!,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Geef een prijs in';
-                      }
-                      if (double.tryParse(value) == null) {
-                        return 'Geef een geldige prijs in';
-                      }
-                      return null;
-                    },
                   ),
                   const SizedBox(height: 15),
                   ElevatedButton(
