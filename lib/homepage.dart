@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 
@@ -124,7 +123,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 20.0),
 
             Container(
-                height: MediaQuery.of(context).size.height / 1.42,
+                height: MediaQuery.of(context).size.height / 1.44,
                 width: MediaQuery.of(context).size.width,
                 child: FlutterMap(
                   mapController: _mapController,
@@ -196,7 +195,7 @@ class _HomePageState extends State<HomePage> {
     LatLng? latLng = await _getLatLngFromAddress(address);
     if (latLng == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Location not found'),
         ),
       );
@@ -232,27 +231,3 @@ class _HomePageState extends State<HomePage> {
     return null;
   }
 }
-
-
-
-
-
-
-
-
-/* 
-            // rode circel
-            /*CircleLayer(
-                        circles: [
-                          CircleMarker(
-                            point: LatLng(
-                                51.260197, 4.402771), // center of  Antwerpen
-                            radius: 5000,
-                            useRadiusInMeter: true,
-                            color: Colors.red.withOpacity(0.3),
-                            borderColor: Colors.red.withOpacity(0.7),
-                            borderStrokeWidth: 2,
-                          )
-                        ],
-                      )*/                      
- */

@@ -8,7 +8,9 @@ import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
 class ParkingAdd extends StatefulWidget {
   const ParkingAdd({Key? key}) : super(key: key);
@@ -22,6 +24,10 @@ class _ParkingAddState extends State<ParkingAdd> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _startAtController = TextEditingController(
+    text: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+  );
+
   final _streetController = TextEditingController();
   final _cityController = TextEditingController();
   final _countryController = TextEditingController();
@@ -30,7 +36,7 @@ class _ParkingAddState extends State<ParkingAdd> {
 
   LatLng? _selectedLocation;
   String _countryCity = '';
-
+  final user = FirebaseAuth.instance.currentUser;
   final MapController _mapController = MapController();
 
   @override
@@ -39,54 +45,92 @@ class _ParkingAddState extends State<ParkingAdd> {
     super.dispose();
   }
 
+  String _theme = 'light';
+
+  @override
+  void initState() {
+    super.initState();
+    _getThemePreference();
+  }
+
+  void _getThemePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = user?.email ?? 'guest';
+    setState(() {
+      _theme = prefs.getString('$email-theme') ?? _theme;
+    });
+  }
+
+  void _setThemePreference(String theme) async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = user?.email ?? 'guest';
+    prefs.setString('$email-theme', theme);
+  }
+
+  void _toggleTheme() {
+    final newTheme = _theme == 'light' ? 'dark' : 'light';
+    _setThemePreference(newTheme);
+    setState(() {
+      _theme = newTheme;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = _theme == 'dark';
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: Container(
-          padding: EdgeInsets.zero,
-          margin: EdgeInsets.zero,
-          child: AppBar(
-            automaticallyImplyLeading: false,
-            titleSpacing: 0.0,
-            title: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  '/ParkPlannerLogo.png',
-                  width: 110,
-                  height: 20,
-                  fit: BoxFit.fill,
-                ),
-                const SizedBox(width: 9),
-                const Text(
-                  'Voeg een parkeerplaats toe',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+      backgroundColor:
+          isDarkTheme ? const Color.fromARGB(255, 52, 52, 52) : Colors.white,
+      appBar: AppBar(
+        backgroundColor: isDarkTheme ? Colors.grey[900] : Colors.white,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              '/ParkPlannerLogo.png',
+              width: 120,
+              height: 20,
+              fit: BoxFit.fill,
+            ),
+            const SizedBox(width: 9),
+            const Text(
+              'Voeg een parkeerplaats toe',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.transparent),
+                    overlayColor:
+                        MaterialStateProperty.all<Color>(Colors.transparent),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/home');
+                  },
+                  child: Icon(
+                    Icons.keyboard_return_rounded,
                     color: Colors.green,
                   ),
                 ),
-                Expanded(
-                  child: InkWell(
-                    child: IconButton(
-                      alignment: Alignment.centerRight,
-                      icon: const Icon(Icons.keyboard_return_rounded),
-                      color: Colors.green,
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/home');
-                      },
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-            backgroundColor: Colors.white,
-            elevation: 5,
-            centerTitle: false,
-          ),
+          ],
         ),
+        shape: isDarkTheme
+            ? const Border(
+                bottom: BorderSide(color: Colors.white, width: 0.5),
+              )
+            : null,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -176,9 +220,25 @@ class _ParkingAddState extends State<ParkingAdd> {
               padding: const EdgeInsets.all(3.0),
               child: TextFormField(
                 controller: _streetController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Straatnaam',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  enabledBorder: isDarkTheme
+                      ? const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
+                        )
+                      : null,
+                  labelStyle: TextStyle(
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -186,9 +246,25 @@ class _ParkingAddState extends State<ParkingAdd> {
               padding: const EdgeInsets.all(3.0),
               child: TextFormField(
                 controller: _houseNumberController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Huisnummer',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  enabledBorder: isDarkTheme
+                      ? const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
+                        )
+                      : null,
+                  labelStyle: TextStyle(
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -196,9 +272,25 @@ class _ParkingAddState extends State<ParkingAdd> {
               padding: const EdgeInsets.all(3.0),
               child: TextFormField(
                 controller: _postalCodeController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Postcode',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  enabledBorder: isDarkTheme
+                      ? const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
+                        )
+                      : null,
+                  labelStyle: TextStyle(
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -206,9 +298,25 @@ class _ParkingAddState extends State<ParkingAdd> {
               padding: const EdgeInsets.all(3.0),
               child: TextFormField(
                 controller: _cityController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Woonplaats',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  enabledBorder: isDarkTheme
+                      ? const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
+                        )
+                      : null,
+                  labelStyle: TextStyle(
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -216,9 +324,25 @@ class _ParkingAddState extends State<ParkingAdd> {
               padding: const EdgeInsets.all(3.0),
               child: TextFormField(
                 controller: _countryController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Land',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  enabledBorder: isDarkTheme
+                      ? const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
+                        )
+                      : null,
+                  labelStyle: TextStyle(
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -239,10 +363,29 @@ class _ParkingAddState extends State<ParkingAdd> {
               child: TextFormField(
                 controller: _durationController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Aantal uur parkeerplaats openstellen',
                   border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
+                    borderSide: isDarkTheme
+                        ? const BorderSide(color: Colors.white)
+                        : const BorderSide(color: Colors.black),
+                  ),
+                  enabledBorder: isDarkTheme
+                      ? const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
+                        )
+                      : null,
+                  labelStyle: TextStyle(
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
                 ),
               ),
             ),
@@ -251,11 +394,72 @@ class _ParkingAddState extends State<ParkingAdd> {
               child: TextFormField(
                 controller: _descriptionController,
                 maxLines: null,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black)),
+                    borderSide: isDarkTheme
+                        ? const BorderSide(color: Colors.white)
+                        : const BorderSide(color: Colors.black),
+                  ),
                   labelText: 'Extra beschrijving',
+                  enabledBorder: isDarkTheme
+                      ? const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
+                        )
+                      : null,
+                  labelStyle: TextStyle(
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
+                  ),
                 ),
+                style: TextStyle(
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: TextFormField(
+                controller: _startAtController,
+                keyboardType: TextInputType.datetime,
+                decoration: InputDecoration(
+                  labelText: 'Vanaf welk tijd en datum staat uw ruimte open?',
+                  border: OutlineInputBorder(
+                    borderSide: isDarkTheme
+                        ? const BorderSide(color: Colors.white)
+                        : const BorderSide(color: Colors.black),
+                  ),
+                  enabledBorder: isDarkTheme
+                      ? const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
+                        )
+                      : null,
+                  labelStyle: TextStyle(
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
+                ),
+                validator: (value) {
+                  if (value == null || value == "") {
+                    return 'Voer alstublieft een datum in.';
+                  }
+                  try {
+                    DateTime.parse(value);
+                  } catch (e) {
+                    return 'Voer alstublieft een geldige datum in.';
+                  }
+                  return null;
+                },
               ),
             ),
             const SizedBox(height: 16),
@@ -269,6 +473,15 @@ class _ParkingAddState extends State<ParkingAdd> {
               ),
               child:
                   const Text('Bewaar', style: TextStyle(color: Colors.white)),
+            ),
+            const SizedBox(height: 15),
+            TextButton(
+              onPressed: _toggleTheme,
+              child: Text(
+                'Schakel over naar ${isDarkTheme ? 'licht' : 'donker'} achtergrondkleur',
+                style:
+                    TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+              ),
             ),
             const SizedBox(height: 16),
           ],
@@ -330,8 +543,6 @@ class _ParkingAddState extends State<ParkingAdd> {
     _mapController.move(_mapController.center, _mapController.zoom - 1);
   }
 
-  //suggestie van leerkracht: gebruik ontap: https://docs.fleaflet.dev/usage/options/other-options
-  // momenteel redelijk innacuraat, maar dat komt omdat de coordinaten van de map niet overeenkomen met de coordinaten van de echte wereld
   Future<void> _selectLocation(LatLng tappedLocation) async {
     final selectedLocation = tappedLocation;
     final response = await http.get(Uri.parse(
@@ -351,6 +562,8 @@ class _ParkingAddState extends State<ParkingAdd> {
         _selectedLocation = selectedLocation;
         _countryCity = address;
       });
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Adres in map gevonden.')));
     }
   }
 
@@ -359,8 +572,8 @@ class _ParkingAddState extends State<ParkingAdd> {
         '${_countryController.text}, ${_postalCodeController.text} ${_cityController.text}, ${_streetController.text} ${_houseNumberController.text}';
     final selectedLocation = await geocodeAddress(address);
     if (selectedLocation == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Adres niet gevonden. Probeer het opnieuw.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Adres in input niet gevonden.')));
       return;
     }
     setState(() {
@@ -419,7 +632,7 @@ class _ParkingAddState extends State<ParkingAdd> {
         'latitude': _selectedLocation!.latitude,
         'longitude': _selectedLocation!.longitude,
         'duration': duration,
-        'created_at': FieldValue.serverTimestamp(),
+        'start_at': _startAtController.text,
         'description': _descriptionController.text,
       });
 
