@@ -24,6 +24,7 @@ class _ParkingAddState extends State<ParkingAdd> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final TextEditingController _durationController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
   final TextEditingController _startAtController = TextEditingController(
     text: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
   );
@@ -152,8 +153,7 @@ class _ParkingAddState extends State<ParkingAdd> {
                     mapController: _mapController,
                     options: MapOptions(
                       center: LatLng(51.2194, 4.4025),
-                      zoom:
-                          8.0, //zie notepad file die je opgeslagen hebt in documenten of bureaublad
+                      zoom: 8.0,
                       onTap: (tapPosition, LatLng location) =>
                           _selectLocation(location),
                     ),
@@ -172,10 +172,6 @@ class _ParkingAddState extends State<ParkingAdd> {
                             ),
                         ],
                       ),
-                      //  GestureDetector(
-                      //   onTapUp: (details) => _selectLocation(details as LatLng),//error
-                      //   behavior: HitTestBehavior.translucent,
-                      // ),
                     ],
                   ),
                   Positioned(
@@ -462,6 +458,38 @@ class _ParkingAddState extends State<ParkingAdd> {
                 },
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: TextFormField(
+                maxLines: null,
+                controller: _priceController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: isDarkTheme
+                        ? const BorderSide(color: Colors.white)
+                        : const BorderSide(color: Colors.black),
+                  ),
+                  labelText: 'Prijs',
+                  enabledBorder: isDarkTheme
+                      ? const OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Color.fromARGB(255, 175, 175, 175)),
+                        )
+                      : null,
+                  labelStyle: TextStyle(
+                    color: isDarkTheme
+                        ? const Color.fromARGB(255, 175, 175, 175)
+                        : null,
+                  ),
+                ),
+                style: TextStyle(
+                  color: isDarkTheme
+                      ? const Color.fromARGB(255, 218, 218, 218)
+                      : null,
+                ),
+              ),
+            ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _submitParkingSpace,
@@ -497,16 +525,6 @@ class _ParkingAddState extends State<ParkingAdd> {
               color: Colors.green,
               onPressed: () {
                 Navigator.pushNamed(context, '/home');
-              },
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            IconButton(
-              icon: const Icon(Icons.person),
-              color: Colors.green,
-              onPressed: () {
-                Navigator.pushNamed(context, '/profile');
               },
             ),
             const SizedBox(
@@ -599,6 +617,23 @@ class _ParkingAddState extends State<ParkingAdd> {
   }
 
   void _submitParkingSpace() async {
+    final price = double.tryParse(_priceController.text);
+    if (price == null) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Incorrecte prijs'),
+          content: const Text('Geef alsjeblieft een correcte prijs in.'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: const Text('Oké'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
     final durationText = _durationController.text;
     final duration = int.tryParse(durationText);
 
@@ -633,6 +668,7 @@ class _ParkingAddState extends State<ParkingAdd> {
         'longitude': _selectedLocation!.longitude,
         'duration': duration,
         'start_at': _startAtController.text,
+        'price': _priceController.text,
         'description': _descriptionController.text,
       });
 

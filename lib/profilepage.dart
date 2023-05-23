@@ -424,6 +424,16 @@ class _ProfilePageState extends State<ProfilePage> {
               width: 20,
             ),
             IconButton(
+              icon: const Icon(Icons.calendar_today),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.pushNamed(context, '/reservation');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
               icon: const Icon(Icons.add_location),
               color: Colors.green,
               onPressed: () {

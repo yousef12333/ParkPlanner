@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:parkplannerproject/parking_add.dart';
 import 'package:parkplannerproject/profilepage.dart';
+import 'package:parkplannerproject/reservationspage.dart';
 import 'package:parkplannerproject/user_registration.dart';
 import 'package:parkplannerproject/user_login.dart';
 import 'car_add.dart';
@@ -30,8 +31,9 @@ class MainApp extends StatelessWidget {
             initialRoute: '/home',
             routes: {
               '/home': (context) => HomePage(),
-              '/addcar': (context) => const CarAddPage(),
               '/profile': (context) => const ProfilePage(),
+              '/addcar': (context) => const CarAddPage(),
+              '/reservation': (context) => ReservationsPage(),
               '/addparking': (context) => const ParkingAdd(),
             },
           );
