@@ -23,7 +23,7 @@ class RegistrationPageState extends State<RegistrationPage> {
   late String phoneNumber;
   late String password;
   bool _obscureText = true;
-  String _eyeImage = 'Eye_open.jpg'; //zorg ervoor dat de code hieronder werkt.
+  String _eyeImage = 'Eye_open.jpg';
   void _toggleObscureText() {
     setState(() {
       _obscureText = !_obscureText;

@@ -57,8 +57,7 @@ class _MainAppState extends State<MainApp> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Uw Token is vervallen'),
-            content:
-                const Text('Uw sessie is vervallen. Log alsjeblieft weer.'),
+            content: const Text('Uw sessie is vervallen. U mag nu uitloggen.'),
             actions: <Widget>[
               TextButton(
                 child: const Text('OK'),

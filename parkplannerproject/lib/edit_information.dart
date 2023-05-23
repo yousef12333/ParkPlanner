@@ -294,8 +294,8 @@ class _EditInformationPageState extends State<EditInformationPage> {
                                                 minHeight: 130.0),
                                             child: ElevatedButton(
                                               onPressed: () {
-                                                Navigator.of(context).pushNamed(
-                                                    '/edit_information');
+                                                Navigator.of(context)
+                                                    .pushNamed('/login');
                                               },
                                               style: ElevatedButton.styleFrom(
                                                 primary: Colors.white,
@@ -310,16 +310,15 @@ class _EditInformationPageState extends State<EditInformationPage> {
                                                   IconButton(
                                                     onPressed: () {
                                                       Navigator.of(context)
-                                                          .pushNamed(
-                                                              '/edit_information');
+                                                          .pushNamed('/login');
                                                     },
                                                     icon: const Icon(
-                                                      Icons.person,
+                                                      Icons.add_circle_outline,
                                                       color: Colors.green,
                                                     ),
                                                   ),
                                                   const Text(
-                                                    'Wilt u uw gebruikersgegevens aanpassen?',
+                                                    'Heeft u al een account?',
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 12,
@@ -327,7 +326,7 @@ class _EditInformationPageState extends State<EditInformationPage> {
                                                   ),
                                                   GestureDetector(
                                                     child: const Text(
-                                                      'Wijzig gebruikersgegevens',
+                                                      'Log in',
                                                       style: TextStyle(
                                                         color: Colors.green,
                                                         fontSize: 12,

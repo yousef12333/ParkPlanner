@@ -384,7 +384,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                                           child: ElevatedButton(
                                             onPressed: () {
                                               Navigator.of(context)
-                                                  .pushNamed('/edit_password');
+                                                  .pushNamed('/login');
                                             },
                                             style: ElevatedButton.styleFrom(
                                               primary: Colors.white,
@@ -398,16 +398,15 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                                                 IconButton(
                                                   onPressed: () {
                                                     Navigator.of(context)
-                                                        .pushNamed(
-                                                            '/edit_password');
+                                                        .pushNamed('/login');
                                                   },
                                                   icon: const Icon(
-                                                    Icons.lock,
+                                                    Icons.add_circle_outline,
                                                     color: Colors.green,
                                                   ),
                                                 ),
                                                 const Text(
-                                                  'Wilt u uw wachtwoord aanpassen?',
+                                                  'Heeft u al een account?',
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 12,
@@ -415,7 +414,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                                                 ),
                                                 GestureDetector(
                                                   child: const Text(
-                                                    'Wijzig wachtwoord',
+                                                    'Log in',
                                                     style: TextStyle(
                                                       color: Colors.green,
                                                       fontSize: 12,

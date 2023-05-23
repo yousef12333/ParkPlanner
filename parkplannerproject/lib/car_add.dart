@@ -51,7 +51,7 @@ class _CarAddPageState extends State<CarAddPage> {
     });
   }
 
-  void _submitForm() {
+  void _submitForm(BuildContext context) {
     final isValid = formKey.currentState?.validate();
 
     if (!isValid!) {
@@ -201,7 +201,7 @@ class _CarAddPageState extends State<CarAddPage> {
                   ),
                   const SizedBox(height: 15),
                   ElevatedButton(
-                    onPressed: _submitForm,
+                    onPressed: () => _submitForm(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       shape: RoundedRectangleBorder(
