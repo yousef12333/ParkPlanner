@@ -7,6 +7,7 @@ import 'package:parkplannerproject/user_registration.dart';
 import 'package:parkplannerproject/user_login.dart';
 import 'package:parkplannerproject/edit_password.dart';
 import 'package:parkplannerproject/edit_information.dart';
+import 'package:parkplannerproject/profile.dart';
 import 'car_add.dart';
 import 'firebase_options.dart';
 import 'package:parkplannerproject/homepage.dart';
@@ -96,10 +97,11 @@ class _MainAppState extends State<MainApp> {
               key: _appKey,
               initialRoute: '/home',
               routes: {
-                '/home': (context) => const HomePage(),
+                '/home': (context) => HomePage(),
                 '/addcar': (context) => const CarAddPage(),
                 '/addparking': (context) => const ParkingAdd(),
                 '/login': (context) => const LoginPage(),
+                '/profile': (context) => const ProfilePage(),
               },
               onUnknownRoute: (settings) {
                 if (settings.name == '/login') {
