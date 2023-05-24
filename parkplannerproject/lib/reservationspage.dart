@@ -16,8 +16,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   List<DocumentSnapshot> _reservations = [];
   bool _showData = false;
-  bool _showParkingSlots =
-      false; // Added variable to track parking slots visibility
+  bool _showParkingSlots = false;
   String _currentUserEmail = '';
   int _selectedParkingIndex = -1;
   DocumentReference? _selectedReservationRef;
@@ -80,7 +79,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
   Future<void> _restoreReservationData() async {
     User? currentUser = _auth.currentUser;
     if (currentUser != null) {
-      // Haal de opgeslagen gegevens op uit de lokale opslag
       SharedPreferences prefs = await SharedPreferences.getInstance();
       int? selectedParkingIndex = prefs.getInt('selectedParkingIndex');
       String? selectedReservationId = prefs.getString('selectedReservationId');
@@ -104,7 +102,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
   Future<void> fetchReservations() async {
     if (_showParkingSlots) {
       setState(() {
-        _showParkingSlots = false; // Close parking slots list
+        _showParkingSlots = false;
       });
       return;
     }
@@ -115,7 +113,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
           .where((reservation) => reservation['email'] == _currentUserEmail)
           .toList();
       _showData = true;
-      _showParkingSlots = true; // Open parking slots list
+      _showParkingSlots = true;
     });
   }
 
@@ -144,25 +142,22 @@ class _ReservationsPageState extends State<ReservationsPage> {
         .where('start_at', isEqualTo: startAt)
         .get();
 
-    return snapshot.docs
-        .isEmpty; // Return true if no reservations exist for the specified start time
+    return snapshot.docs.isEmpty;
   }
 
   void chooseParkingSlot(int index) async {
     if (_selectedParkingIndex != index) {
       if (_selectedReservationRef != null) {
-        // Toon een dialoogvenster om de gebruiker te vragen of hij wil doorgaan
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: Text('Bevestigen'),
               content:
-                  Text('Wil je doorgaan en de vorige reservering verwijderen?'),
+                  Text('Wil je doorgaan en de vorige reservering annuleren?'),
               actions: [
                 TextButton(
                   onPressed: () {
-                    // Sluit het dialoogvenster en ga door met het selecteren van de nieuwe parkeerplaats
                     Navigator.of(context).pop();
                     setState(() {
                       _selectedParkingIndex = index;
@@ -173,7 +168,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 ),
                 TextButton(
                   onPressed: () {
-                    // Sluit het dialoogvenster zonder wijzigingen aan te brengen
                     Navigator.of(context).pop();
                   },
                   child: Text('Nee'),
@@ -220,7 +214,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
           _selectedReservationRef = reservationRef;
         });
 
-        // Sla de reserveringsgegevens op in de lokale opslag
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setInt('selectedParkingIndex', _selectedParkingIndex);
         prefs.setString('selectedReservationId', reservationRef.id);
@@ -239,7 +232,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
       await _selectedReservationRef!.delete();
       _selectedReservationRef = null;
 
-      // Verwijder de opgeslagen reserveringsgegevens uit de lokale opslag
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.remove('selectedParkingIndex');
       prefs.remove('selectedReservationId');
@@ -335,6 +327,8 @@ class _ReservationsPageState extends State<ReservationsPage> {
       return SizedBox.shrink();
     }
 
+    final isDarkTheme = _theme == 'dark';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -343,18 +337,21 @@ class _ReservationsPageState extends State<ReservationsPage> {
           style: TextStyle(
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
-            color: _theme == 'dark' ? Colors.white : Colors.black,
+            color: isDarkTheme ? Colors.white : Colors.black,
           ),
         ),
         const SizedBox(height: 8.0),
         TextFormField(
+          style: TextStyle(
+            color: isDarkTheme ? Colors.white : Colors.black,
+          ),
           controller: _cardNumberController,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             hintText: 'Voer de kaartnummer in',
             border: OutlineInputBorder(
               borderSide: BorderSide(
-                color: _theme == 'dark' ? Colors.white : Colors.black,
+                color: isDarkTheme ? Colors.white : Colors.black,
               ),
             ),
           ),
@@ -399,7 +396,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   ),
                   const SizedBox(width: 10),
                   const Text(
-                    'Reservation',
+                    'Reservatie',
                     style: TextStyle(
                       fontSize: 19,
                       fontWeight: FontWeight.bold,
@@ -444,17 +441,13 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     ? 'Sluit parkeerplaatsen'
                     : 'Toon parkeerplaatsen',
                 style: TextStyle(
-                  color: isDarkTheme
-                      ? Colors.white
-                      : Colors
-                          .black, // Update the text color based on the theme
+                  color: isDarkTheme ? Colors.white : Colors.black,
                 ),
               ),
             ),
             SizedBox(height: 20.0),
             _buildMessageWidget(),
-            _showData &&
-                    _showParkingSlots // Only show parking slots if _showParkingSlots is true
+            _showData && _showParkingSlots
                 ? ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -480,8 +473,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                     fontSize: 18,
                                     color: isDarkTheme
                                         ? Colors.white
-                                        : Colors
-                                            .black, // Update the text color based on the theme
+                                        : Colors.black,
                                   ),
                                 ),
                                 subtitle: Column(
@@ -493,8 +485,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                         fontSize: 16,
                                         color: isDarkTheme
                                             ? Colors.white
-                                            : Colors
-                                                .black, // Update the text color based on the theme
+                                            : Colors.black,
                                       ),
                                     ),
                                     Text(
@@ -503,8 +494,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                         fontSize: 16,
                                         color: isDarkTheme
                                             ? Colors.white
-                                            : Colors
-                                                .black, // Update the text color based on the theme
+                                            : Colors.black,
                                       ),
                                     ),
                                     Text(
@@ -513,8 +503,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                         fontSize: 16,
                                         color: isDarkTheme
                                             ? Colors.white
-                                            : Colors
-                                                .black, // Update the text color based on the theme
+                                            : Colors.black,
                                       ),
                                     ),
                                     Text(
@@ -523,8 +512,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                         fontSize: 16,
                                         color: isDarkTheme
                                             ? Colors.white
-                                            : Colors
-                                                .black, // Update the text color based on the theme
+                                            : Colors.black,
                                       ),
                                     ),
                                     Text(
@@ -533,8 +521,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                         fontSize: 16,
                                         color: isDarkTheme
                                             ? Colors.white
-                                            : Colors
-                                                .black, // Update the text color based on the theme
+                                            : Colors.black,
                                       ),
                                     ),
                                   ],
@@ -554,8 +541,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                                           style: TextStyle(
                                             color: isDarkTheme
                                                 ? Colors.white
-                                                : Colors
-                                                    .black, // Update the text color based on the theme
+                                                : Colors.black,
                                           ),
                                         )));
                           } else {
@@ -580,10 +566,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 child: Text(
                   'Reservering annuleren',
                   style: TextStyle(
-                    color: isDarkTheme
-                        ? Colors.white
-                        : Colors
-                            .black, // Update the text color based on the theme
+                    color: isDarkTheme ? Colors.white : Colors.black,
                   ),
                 )),
             const SizedBox(height: 16.0),
@@ -597,10 +580,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 child: Text(
                   'Reserveren',
                   style: TextStyle(
-                    color: isDarkTheme
-                        ? Colors.white
-                        : Colors
-                            .black, // Update the text color based on the theme
+                    color: isDarkTheme ? Colors.white : Colors.black,
                   ),
                 )),
             SizedBox(height: 30.0),
@@ -609,9 +589,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: isDarkTheme
-                    ? Colors.white
-                    : Colors.black, // Update the text color based on the theme
+                color: isDarkTheme ? Colors.white : Colors.black,
               ),
             ),
             const SizedBox(height: 8.0),
@@ -625,14 +603,12 @@ class _ReservationsPageState extends State<ReservationsPage> {
                     paymentMethod,
                     style: TextStyle(
                       fontSize: 16.0,
-                      color: isDarkTheme
-                          ? Colors.white
-                          : Colors
-                              .black, // Update the text color based on the theme
+                      color: isDarkTheme ? Colors.white : Colors.black,
                     ),
                   ),
                   value: paymentMethod,
                   groupValue: _selectedPaymentMethod,
+                  activeColor: Colors.green,
                   onChanged: (value) {
                     setState(() {
                       _selectedPaymentMethod = value as String;
@@ -648,9 +624,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
               style: TextStyle(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
-                color: isDarkTheme
-                    ? Colors.white
-                    : Colors.black, // Update the text color based on the theme
+                color: isDarkTheme ? Colors.white : Colors.black,
               ),
             ),
             SizedBox(height: 8.0),
@@ -661,17 +635,11 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 hintText: 'Voer het bedrag in',
                 border: OutlineInputBorder(),
                 hintStyle: TextStyle(
-                  color: isDarkTheme
-                      ? Colors.white70
-                      : Colors
-                          .black54, // Update the hint text color based on the theme
+                  color: isDarkTheme ? Colors.white70 : Colors.black54,
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: isDarkTheme
-                        ? Colors.white70
-                        : Colors
-                            .black54, // Update the border color based on the theme
+                    color: isDarkTheme ? Colors.white70 : Colors.black54,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -687,7 +655,6 @@ class _ReservationsPageState extends State<ReservationsPage> {
                   final amountToPay =
                       double.tryParse(_amountController.text) ?? 0.0;
                   final cardNumber = _cardNumberController.text;
-                  // hier moet ik de betalingsverwerkingslogica uitvoeren
                   print('Geselecteerde betaalmethode: $_selectedPaymentMethod');
                   print('Kaartnummer: $cardNumber');
                   print('Te betalen bedrag: $amountToPay');
@@ -698,10 +665,7 @@ class _ReservationsPageState extends State<ReservationsPage> {
                 child: Text(
                   'Nu betalen',
                   style: TextStyle(
-                    color: isDarkTheme
-                        ? Colors.white
-                        : Colors
-                            .black, // Update the text color based on the theme
+                    color: isDarkTheme ? Colors.white : Colors.black,
                   ),
                 )),
             SizedBox(height: 15),

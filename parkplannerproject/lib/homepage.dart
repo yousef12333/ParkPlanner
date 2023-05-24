@@ -54,6 +54,14 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _zoomIn() {
+    _mapController.move(_mapController.center, _mapController.zoom + 1);
+  }
+
+  void _zoomOut() {
+    _mapController.move(_mapController.center, _mapController.zoom - 1);
+  }
+
   void _loadCurrentLocation() async {
     bool locationPermissionGranted = await _checkLocationPermission();
     if (locationPermissionGranted) {
@@ -302,6 +310,36 @@ class _HomePageState extends State<HomePage> {
                   ),
                   MarkerLayer(
                     markers: _markers,
+                  ),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          FloatingActionButton(
+                            onPressed: _zoomIn,
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(Icons.zoom_in),
+                          ),
+                          const SizedBox(height: 10),
+                          FloatingActionButton(
+                            onPressed: _zoomOut,
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(Icons.zoom_out),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),

@@ -164,7 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () {
                           Navigator.pushNamed(context, '/home');
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.keyboard_return_rounded,
                           color: Colors.green,
                         ),
@@ -192,7 +192,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ListTile(
-                        leading: Icon(Icons.person, color: Colors.green),
+                        leading: const Icon(Icons.person, color: Colors.green),
                         title: Text(
                           'Voornaam',
                           style: TextStyle(
@@ -205,6 +205,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                style: TextStyle(
+                                  color:
+                                      isDarkTheme ? Colors.white : Colors.black,
+                                ),
                                 controller: firstNameController,
                                 enabled: isEditingFirstName,
                                 onChanged: (value) {
@@ -239,7 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       ListTile(
-                        leading: Icon(Icons.person, color: Colors.green),
+                        leading: const Icon(Icons.person, color: Colors.green),
                         title: Text(
                           'Achternaam',
                           style: TextStyle(
@@ -252,6 +256,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                style: TextStyle(
+                                  color:
+                                      isDarkTheme ? Colors.white : Colors.black,
+                                ),
                                 controller: lastNameController,
                                 enabled: isEditingLastName,
                                 onChanged: (value) {
@@ -286,7 +294,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       ListTile(
-                        leading: Icon(Icons.phone, color: Colors.green),
+                        leading: const Icon(Icons.phone, color: Colors.green),
                         title: Text(
                           'Telefoonnummer',
                           style: TextStyle(
@@ -299,6 +307,10 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                style: TextStyle(
+                                  color:
+                                      isDarkTheme ? Colors.white : Colors.black,
+                                ),
                                 controller: phoneNumberController,
                                 enabled: isEditingPhoneNumber,
                                 onChanged: (value) {
@@ -350,12 +362,13 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             SwitchListTile(
               title: Text(
-                'Notifications',
+                'Notificaties',
                 style: TextStyle(
                   color: isDarkTheme ? Colors.white : Colors.black,
                 ),
               ),
               value: _notificationsEnabledNot,
+              activeColor: Colors.green,
               onChanged: (value) {
                 setState(() {
                   _notificationsEnabledNot = value;
@@ -364,12 +377,13 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             SwitchListTile(
               title: Text(
-                'Warnings',
+                'Waarschuwingen',
                 style: TextStyle(
                   color: isDarkTheme ? Colors.white : Colors.black,
                 ),
               ),
               value: _notificationsEnabledWar,
+              activeColor: Colors.green,
               onChanged: (value) {
                 setState(() {
                   _notificationsEnabledWar = value;
@@ -388,8 +402,12 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             ListTile(
-              title: const Text('Wachtwoord wijzigen'),
-              trailing: const Icon(
+              title: Text(
+                'Wachtwoord wijzigen',
+                style:
+                    TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+              ),
+              trailing: Icon(
                 Icons.arrow_forward_ios,
                 color: Colors.green,
               ),
@@ -415,7 +433,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: isDarkTheme ? Colors.white : Colors.black,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Text(
                     'Contact opnemen met klantenservice:',
                     style: TextStyle(
@@ -423,14 +441,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: isDarkTheme ? Colors.white : Colors.black,
                     ),
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.phone,
                         color: Colors.green,
                       ),
-                      SizedBox(width: 8.0),
+                      const SizedBox(width: 8.0),
                       Text(
                         '003246522071',
                         style: TextStyle(
@@ -440,14 +458,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.email,
                         color: Colors.green,
                       ),
-                      SizedBox(width: 8.0),
+                      const SizedBox(width: 8.0),
                       Text(
                         'parkplanner@klantenservice.be',
                         style: TextStyle(
@@ -472,7 +490,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ],
         ),
-        // Navigation
         bottomNavigationBar: SizedBox(
           height: 60,
           child:
