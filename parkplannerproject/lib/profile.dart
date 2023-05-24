@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'edit_password.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -28,14 +29,37 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
-
+  String _theme = 'light';
   @override
   void initState() {
     super.initState();
+    _getThemePreference();
     getFullNames().then((_) {
       firstNameController.text = userFirstName;
       lastNameController.text = userLastName;
       phoneNumberController.text = phoneNumber;
+    });
+  }
+
+  void _getThemePreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = user?.email ?? 'guest';
+    setState(() {
+      _theme = prefs.getString('$email-theme') ?? _theme;
+    });
+  }
+
+  void _setThemePreference(String theme) async {
+    final prefs = await SharedPreferences.getInstance();
+    final email = user?.email ?? 'guest';
+    prefs.setString('$email-theme', theme);
+  }
+
+  void _toggleTheme() {
+    final newTheme = _theme == 'light' ? 'dark' : 'light';
+    _setThemePreference(newTheme);
+    setState(() {
+      _theme = newTheme;
     });
   }
 
@@ -87,12 +111,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = _theme == 'dark';
     return Scaffold(
+        backgroundColor:
+            isDarkTheme ? const Color.fromARGB(255, 52, 52, 52) : Colors.white,
         body: ListView(
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDarkTheme ? Colors.black : Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color: const Color.fromARGB(255, 222, 222, 222)
@@ -124,6 +151,26 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Colors.green,
                     ),
                   ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.transparent),
+                          overlayColor: MaterialStateProperty.all<Color>(
+                              Colors.transparent),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/home');
+                        },
+                        child: Icon(
+                          Icons.keyboard_return_rounded,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -132,11 +179,12 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Personal Information',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
+                      color: isDarkTheme ? Colors.white : Colors.black,
                     ),
                   ),
                   const SizedBox(height: 16.0),
@@ -144,12 +192,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ListTile(
-                        leading: const Icon(Icons.person, color: Colors.green),
-                        title: const Text(
+                        leading: Icon(Icons.person, color: Colors.green),
+                        title: Text(
                           'Voornaam',
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,
+                            color: isDarkTheme ? Colors.white : Colors.black,
                           ),
                         ),
                         subtitle: Row(
@@ -190,12 +239,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       ListTile(
-                        leading: const Icon(Icons.person, color: Colors.green),
-                        title: const Text(
+                        leading: Icon(Icons.person, color: Colors.green),
+                        title: Text(
                           'Achternaam',
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,
+                            color: isDarkTheme ? Colors.white : Colors.black,
                           ),
                         ),
                         subtitle: Row(
@@ -236,12 +286,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                       ListTile(
-                        leading: const Icon(Icons.phone, color: Colors.green),
-                        title: const Text(
+                        leading: Icon(Icons.phone, color: Colors.green),
+                        title: Text(
                           'Telefoonnummer',
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: FontWeight.bold,
+                            color: isDarkTheme ? Colors.white : Colors.black,
                           ),
                         ),
                         subtitle: Row(
@@ -286,18 +337,24 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 'Preferences and Settings',
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
+                  color: isDarkTheme ? Colors.white : Colors.black,
                 ),
               ),
             ),
             SwitchListTile(
-              title: const Text('Notifications'),
+              title: Text(
+                'Notifications',
+                style: TextStyle(
+                  color: isDarkTheme ? Colors.white : Colors.black,
+                ),
+              ),
               value: _notificationsEnabledNot,
               onChanged: (value) {
                 setState(() {
@@ -306,7 +363,12 @@ class _ProfilePageState extends State<ProfilePage> {
               },
             ),
             SwitchListTile(
-              title: const Text('Warnings'),
+              title: Text(
+                'Warnings',
+                style: TextStyle(
+                  color: isDarkTheme ? Colors.white : Colors.black,
+                ),
+              ),
               value: _notificationsEnabledWar,
               onChanged: (value) {
                 setState(() {
@@ -314,13 +376,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 });
               },
             ),
-            const Padding(
-              padding: EdgeInsets.all(16.0),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Text(
                 'Bewerk Wachtwoord',
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
+                  color: isDarkTheme ? Colors.white : Colors.black,
                 ),
               ),
             ),
@@ -331,6 +394,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 color: Colors.green,
               ),
               onTap: () {
+                FirebaseAuth.instance.signOut();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -343,51 +407,65 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Help en Ondersteuning',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
+                      color: isDarkTheme ? Colors.white : Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 8.0),
-                  const Text(
+                  SizedBox(height: 8.0),
+                  Text(
                     'Contact opnemen met klantenservice:',
                     style: TextStyle(
                       fontSize: 16.0,
+                      color: isDarkTheme ? Colors.white : Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 8.0),
+                  SizedBox(height: 8.0),
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.phone,
                         color: Colors.green,
                       ),
-                      const SizedBox(width: 8.0),
-                      const Text(
+                      SizedBox(width: 8.0),
+                      Text(
                         '003246522071',
                         style: TextStyle(
                           fontSize: 16.0,
+                          color: isDarkTheme ? Colors.white : Colors.black,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8.0),
+                  SizedBox(height: 8.0),
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.email,
                         color: Colors.green,
                       ),
-                      const SizedBox(width: 8.0),
-                      const Text(
+                      SizedBox(width: 8.0),
+                      Text(
                         'parkplanner@klantenservice.be',
                         style: TextStyle(
                           fontSize: 16.0,
+                          color: isDarkTheme ? Colors.white : Colors.black,
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: 15),
+                  TextButton(
+                    onPressed: _toggleTheme,
+                    child: Text(
+                      'Schakel over naar ${isDarkTheme ? 'licht' : 'donker'} achtergrondkleur',
+                      style: TextStyle(
+                        color: isDarkTheme ? Colors.white : Colors.black,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -424,6 +502,16 @@ class _ProfilePageState extends State<ProfilePage> {
               color: Colors.green,
               onPressed: () {
                 Navigator.pushNamed(context, '/addcar');
+              },
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              icon: const Icon(Icons.calendar_today),
+              color: Colors.green,
+              onPressed: () {
+                Navigator.pushNamed(context, '/reservation');
               },
             ),
             const SizedBox(

@@ -26,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-//de delay is ook nodig voor de logout icon in homepage.dart
   void _signIn() async {
     try {
       setState(() {
@@ -39,9 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       );
       if (!mounted) return;
 
-      await Future.delayed(const Duration(
-          milliseconds:
-              3000)); //lost de error op door de generate meer tijd te geven
+      await Future.delayed(const Duration(milliseconds: 5000));
       Navigator.of(context).pushNamed('/home');
     } on FirebaseAuthException catch (error) {
       String message = '';

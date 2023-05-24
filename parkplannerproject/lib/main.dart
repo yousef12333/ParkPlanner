@@ -7,6 +7,7 @@ import 'package:parkplannerproject/user_registration.dart';
 import 'package:parkplannerproject/user_login.dart';
 import 'package:parkplannerproject/edit_password.dart';
 import 'package:parkplannerproject/edit_information.dart';
+import 'package:parkplannerproject/reservationspage.dart';
 import 'package:parkplannerproject/profile.dart';
 import 'car_add.dart';
 import 'firebase_options.dart';
@@ -23,7 +24,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MaterialApp(home: MainApp()));
+  runApp(const MaterialApp(home: MainApp()));
 }
 
 class MainApp extends StatefulWidget {
@@ -35,7 +36,7 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> {
   late Timer _signOutTimer;
-  Key _appKey = UniqueKey(); // Unique key for the app
+  Key _appKey = UniqueKey();
 
   @override
   void initState() {
@@ -90,7 +91,7 @@ class _MainAppState extends State<MainApp> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else if (snapshot.hasData) {
             _resetSignOutTimer();
             return MaterialApp(
@@ -102,6 +103,7 @@ class _MainAppState extends State<MainApp> {
                 '/addparking': (context) => const ParkingAdd(),
                 '/login': (context) => const LoginPage(),
                 '/profile': (context) => const ProfilePage(),
+                '/reservation': (context) => ReservationsPage(),
               },
               onUnknownRoute: (settings) {
                 if (settings.name == '/login') {

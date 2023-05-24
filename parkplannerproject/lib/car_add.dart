@@ -244,10 +244,30 @@ class _CarAddPageState extends State<CarAddPage> {
                   width: 20,
                 ),
                 IconButton(
+                  icon: const Icon(Icons.person),
+                  color: Colors.green,
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/profile');
+                  },
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                IconButton(
                   icon: const Icon(Icons.directions_car),
                   color: Colors.green,
                   onPressed: () {
                     Navigator.pushNamed(context, '/addcar');
+                  },
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.calendar_today),
+                  color: Colors.green,
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/reservation');
                   },
                 ),
                 const SizedBox(
